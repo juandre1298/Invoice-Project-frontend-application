@@ -1,0 +1,35 @@
+.loginMain {
+  height: 100vh;
+
+  background-color: #f3eae8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loginBox {
+  background-color: #130f20;
+  padding: 2rem 4rem;
+  color: #f3eae8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: 1rem;
+}
+.loginForm {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+.loginForm input {
+  width: 100%;
+  border: none;
+  border-radius: 2px;
+}
+.createAccountLink {
+  color: orange;
+}
+.createAccountLink:hover {
+  color: red;
+}

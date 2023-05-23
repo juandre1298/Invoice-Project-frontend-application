@@ -1,0 +1,25 @@
+header {
+  background-color: #130f20;
+  color: #f3eae8;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.navBtn {
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.navBtn:hover {
+  text-decoration: underline;
+}

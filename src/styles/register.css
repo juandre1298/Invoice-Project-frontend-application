@@ -1,0 +1,32 @@
+.registerMain {
+  height: 100vh;
+  background-color: #f3eae8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.registerBox {
+  background-color: #130f20;
+  padding: 2rem 4rem;
+  color: #f3eae8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: 1rem;
+}
+.registerForm {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+.egisterForm input {
+  width: 100%;
+  border: none;
+  border-radius: 2px;
+}
+label {
+  text-transform: capitalize;
+  font-weight: bold;
+}
