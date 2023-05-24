@@ -1,6 +1,6 @@
 header {
-  background-color: #130f20;
-  color: #f3eae8;
+  color: rgb(56, 58, 58);
+  background-color: white;
   position: fixed;
   left: 0;
   right: 0;
@@ -8,6 +8,13 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  border-bottom: 2px solid #d3cbc9;
+}
+header img {
+  width: 230px;
+}
+header h1 {
+  color: rgb(56, 58, 58);
 }
 nav {
   display: flex;
@@ -22,4 +29,11 @@ nav {
 }
 .navBtn:hover {
   text-decoration: underline;
+}
+.pathAndStatus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
 }

@@ -1,19 +1,27 @@
+// Import general dependencies
+import React, { useEffect, useState } from "react";
+
+// import components and pages
+import { Header } from "./components/Header";
+import { Login } from "./pages/Login";
+import { Home } from "./pages/Home";
+import { Register } from "./pages/Register";
+import { InvoicesManager } from "./pages/InvoicesManager";
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
+
+// Import styles
+
 import "./styles/App.css";
 import "./styles/home.css";
 import "./styles/header.css";
 import "./styles/footer.css";
 import "./styles/login.css";
 import "./styles/register.css";
+import "./styles/navbar.css";
+import "./styles/invoicesManager.css";
 
-import React, { useEffect, useState } from "react";
-
-import { Header } from "./components/Header";
-
-import { Login } from "./pages/Login";
-import { Home } from "./pages/Home";
-import { Register } from "./pages/Register";
-
-import { Footer } from "./components/Footer";
+// import for router
 import {
   createBrowserRouter,
   RouterProvider,
@@ -21,7 +29,7 @@ import {
   Outlet,
 } from "react-router-dom";
 
-// create context
+// Import context
 import MyContext from "./contexts/userContext";
 
 function App() {
@@ -34,7 +42,7 @@ function App() {
     const globalStatus = localStorage.getItem("globalStatus");
     return globalStatus ? JSON.parse(globalStatus) : "";
   });
-
+  const [globalMinNav, globalSetMinNav] = useState(false);
   // save in localStorage the login and user info.
 
   useEffect(() => {
@@ -49,12 +57,19 @@ function App() {
   const Layout = () => {
     return (
       <MyContext.Provider
-        value={{ globalUser, setGlobalUser, globalStatus, setGlobalStatus }}
+        value={{
+          globalUser,
+          setGlobalUser,
+          globalStatus,
+          setGlobalStatus,
+          globalMinNav,
+          globalSetMinNav,
+        }}
       >
         <Header />
+        <Navbar />
         <ScrollRestoration />
         <Outlet />
-        <Footer />
       </MyContext.Provider>
     );
   };
@@ -76,6 +91,10 @@ function App() {
         {
           path: "/register",
           element: <Register />,
+        },
+        {
+          path: "/InvoicesManager",
+          element: <InvoicesManager />,
         },
       ],
     },

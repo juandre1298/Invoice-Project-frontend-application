@@ -40,3 +40,14 @@ export const checkLogin = async (userOb) => {
     console.log(error);
   }
 };
+// get invoices
+export const getInvoices = async () => {
+  try {
+    let url = `http://localhost:4000/invoices/`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};

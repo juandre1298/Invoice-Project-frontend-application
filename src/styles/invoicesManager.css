@@ -1,0 +1,63 @@
+.invoicesManager {
+  padding-top: 120px;
+  padding-left: 270px;
+  background-color: rgba(243, 242, 242, 255);
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+.invoicesBox {
+  background-color: white;
+  height: 80%;
+  border-radius: 32px;
+  margin: 10px 30px;
+  padding: 4%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+}
+.addInvoice {
+  background-color: rgb(56, 58, 58);
+  border: none;
+  border-radius: 50px;
+  padding: 6px 12px;
+  font-weight: bold;
+  color: white;
+  width: 120px;
+}
+.invoicesBox table {
+  flex-grow: 4;
+}
+.paginationArea {
+}
+.paginationLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.paginationLinks li {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(243, 242, 242, 255);
+  margin: 0 4px;
+}
+.paginationLinks li:hover {
+  background-color: rgb(56, 58, 58);
+  color: white;
+  cursor: pointer;
+}
+.loadingInvoicesBox {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  height: 150px;
+  width: 250px;
+  background-color: rgba(243, 242, 242, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  color: black;
+  font-weight: bold;
+}

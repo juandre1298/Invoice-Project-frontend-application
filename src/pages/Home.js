@@ -6,7 +6,7 @@ import MyContext from "../contexts/userContext";
 export const Home = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
     useContext(MyContext);
-  console.log(globalUser);
+
   return (
     <section className="homeMain">
       {globalStatus ? (

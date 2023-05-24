@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import MyContext from "../contexts/userContext";
@@ -14,23 +14,19 @@ export const Header = () => {
   const handleLogoutClick = () => {
     handleLogout();
   };
+
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
+
   return (
     <header>
-      <h1>First fullstack app</h1>
-      <nav>
-        <Link className="navBtn" to="/">
-          Home
-        </Link>
-        {globalStatus ? (
-          <div>
-            <button onClick={handleLogoutClick}>log out</button>
-          </div>
-        ) : (
-          <Link className="navBtn" to="/login">
-            login
-          </Link>
-        )}
-      </nav>
+      <img src="LogoAim_Edge.jpg" alt="logo" />
+      <div className="pathAndStatus">
+        <h1>{currentPath}</h1>
+        <h2>{globalUser.status}</h2>
+      </div>
     </header>
   );
 };

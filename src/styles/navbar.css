@@ -1,0 +1,78 @@
+nav {
+  background: rgb(34, 38, 39);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  justify-content: space-between;
+  padding: 2rem 0;
+  transition: transform 1s;
+}
+nav:hover {
+  transform: translate(0);
+}
+.navDisplay {
+  transform: translate(0);
+}
+.navCollapse {
+  transform: translate(-230px);
+}
+.NavLinksArea {
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.NavLinksArea li {
+  list-style-type: none;
+  background-color: rgb(56, 58, 58);
+  padding: 12px;
+  border-radius: 50px;
+  color: white;
+  padding: 10px 24px;
+}
+.iconAndText {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.invoiceIcon {
+  font-size: 20px;
+}
+.NavLinksArea li a {
+  color: white;
+}
+.logoutBtnArea {
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+}
+.logoutBtn {
+  border: none;
+  background-color: inherit;
+  color: white;
+}
+.logoutIcon {
+  transform: scaleX(-1);
+}
+.minimize {
+  position: absolute;
+  right: -12px;
+  color: white;
+  border-radius: 100%;
+  width: 32px;
+  height: 32px;
+  background-color: rgb(34, 38, 39);
+  border: none;
+  font-size: 32px;
+}
+.minimize :hover {
+  cursor: pointer;
+}
