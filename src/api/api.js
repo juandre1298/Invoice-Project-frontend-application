@@ -62,3 +62,14 @@ export const getInvoicesByRange = async (start, end) => {
     console.log(err);
   }
 };
+//// get invoices by range client
+export const getInvoicesByRangeByClient = async (clientId, start, end) => {
+  try {
+    let url = `http://localhost:4000/invoices/client/${clientId}/${start}/${end}/`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};

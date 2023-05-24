@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import MyContext from "../contexts/userContext";
 
 // import getInvoices from api
-import { getInvoicesByRange, getInvoices } from "../api/api";
+import {
+  getInvoicesByRange,
+  getInvoices,
+  getInvoicesByRangeByClient,
+} from "../api/api";
 
 export const InvoicesManager = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
@@ -31,7 +35,17 @@ export const InvoicesManager = () => {
     if (globalUser.status === "admin") {
       const getInvoicesFromApi = async () => {
         const invoicesImported = await getInvoices();
-        setInvoiceLength(invoicesImported.length);
+        setInvoiceLength(invoicesImported.length - 1);
+      };
+      getInvoicesFromApi();
+    } else {
+      const getInvoicesFromApi = async () => {
+        const invoicesImported = await getInvoicesByRangeByClient(
+          globalUser.id,
+          0,
+          100000
+        );
+        setInvoiceLength(invoicesImported.length - 1);
       };
       getInvoicesFromApi();
     }
@@ -39,6 +53,7 @@ export const InvoicesManager = () => {
   // handle page change
   useEffect(() => {
     const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
+    console.log(invoiceLength, invoicesPerPage, lastPage);
     // change pagesButtonArray
     if (currentaPage > 5) {
       if (currentaPage > lastPage - 4) {
@@ -68,11 +83,23 @@ export const InvoicesManager = () => {
     } else {
       setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "..."]);
     }
-
-    // get invoices
+    // get invoices if admin
     if (globalUser.status === "admin") {
       const getInvoicesFromApi = async () => {
         const invoicesImported = await getInvoicesByRange(
+          (currentaPage - 1) * invoicesPerPage,
+          (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
+        );
+        setInvoices(invoicesImported);
+        setInvoicesLoading(false);
+      };
+      getInvoicesFromApi();
+    }
+    // get invoices if client
+    if (globalUser.status === "client") {
+      const getInvoicesFromApi = async () => {
+        const invoicesImported = await getInvoicesByRangeByClient(
+          globalUser.id,
           (currentaPage - 1) * invoicesPerPage,
           (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
         );
@@ -111,7 +138,6 @@ export const InvoicesManager = () => {
             ) : (
               <tbody>
                 {invoices.map((invoice, i) => {
-                  console.log(invoice);
                   return (
                     <tr key={i}>
                       <th>{invoice.id}</th>
@@ -144,7 +170,15 @@ export const InvoicesManager = () => {
                 );
               })}
 
-              <li>{parseInt(invoiceLength / invoicesPerPage) + 1}</li>
+              <li
+                onClick={() => {
+                  setCurrentaPage(
+                    parseInt(invoiceLength / invoicesPerPage) + 1
+                  );
+                }}
+              >
+                {parseInt(invoiceLength / invoicesPerPage) + 1}
+              </li>
             </ul>
             <div className="invoicesPerPage">
               Invoices per page: {invoicesPerPage}

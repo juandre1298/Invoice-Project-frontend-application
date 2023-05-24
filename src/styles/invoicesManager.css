@@ -57,6 +57,12 @@
   color: white;
   cursor: pointer;
 }
+.paginationLinks li:active {
+  background-color: rgb(26, 27, 27);
+}
+.pageSelected {
+  background-color: rgb(26, 27, 27);
+}
 .loadingInvoicesBox {
   position: absolute;
   bottom: 30%;
