@@ -4,23 +4,86 @@ import { Link } from "react-router-dom";
 import MyContext from "../contexts/userContext";
 
 // import getInvoices from api
-import { getInvoices } from "../api/api";
+import { getInvoicesByRange, getInvoices } from "../api/api";
 
 export const InvoicesManager = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
     useContext(MyContext);
 
+  // states
   const [invoices, setInvoices] = useState("");
   const [invoicesLoading, setInvoicesLoading] = useState(true);
-  useEffect(() => {
-    const getInvoicesFromApi = async () => {
-      const invoicesImpoted = await getInvoices();
-      setInvoices(invoicesImpoted);
+  const [invoiceLength, setInvoiceLength] = useState(0);
+  const [invoicesPerPage, setInvoicesPerPage] = useState(5);
+  const [currentaPage, setCurrentaPage] = useState(1);
+  const [pagesButtonArray, setPagesButtonArray] = useState([
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    "...",
+  ]);
 
-      setInvoicesLoading(false);
-    };
-    getInvoicesFromApi();
+  // get the total of pages
+  useEffect(() => {
+    if (globalUser.status === "admin") {
+      const getInvoicesFromApi = async () => {
+        const invoicesImported = await getInvoices();
+        setInvoiceLength(invoicesImported.length);
+      };
+      getInvoicesFromApi();
+    }
   }, []);
+  // handle page change
+  useEffect(() => {
+    const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
+    // change pagesButtonArray
+    if (currentaPage > 5) {
+      if (currentaPage > lastPage - 4) {
+        setPagesButtonArray([
+          1,
+          "...",
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 7,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 6,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 5,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 4,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 3,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 2,
+          parseInt(invoiceLength / invoicesPerPage) + 1 - 1,
+        ]);
+      } else {
+        setPagesButtonArray([
+          1,
+          "...",
+          currentaPage - 2,
+          currentaPage - 1,
+          currentaPage,
+          currentaPage + 1,
+          currentaPage + 2,
+          "...",
+        ]);
+      }
+    } else {
+      setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "..."]);
+    }
+
+    // get invoices
+    if (globalUser.status === "admin") {
+      const getInvoicesFromApi = async () => {
+        const invoicesImported = await getInvoicesByRange(
+          (currentaPage - 1) * invoicesPerPage,
+          (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
+        );
+        setInvoices(invoicesImported);
+        setInvoicesLoading(false);
+      };
+      getInvoicesFromApi();
+    }
+  }, [currentaPage]);
+  // get elements by page
+
   return (
     <section className="invoicesManager">
       {globalStatus ? (
@@ -66,15 +129,26 @@ export const InvoicesManager = () => {
             )}
           </table>
           <div className="paginationArea">
+            <div className="invoicesPerPage">Current page: {currentaPage}</div>
             <ul className="paginationLinks">
-              <li>1</li>
-              <li>2</li>
-              <li>3</li>
-              <li>4</li>
-              <li>5</li>
-              <li>...</li>
-              <li>25</li>
+              {pagesButtonArray.map((e, i) => {
+                return (
+                  <li
+                    key={i}
+                    onClick={() => {
+                      setCurrentaPage(e);
+                    }}
+                  >
+                    {e}
+                  </li>
+                );
+              })}
+
+              <li>{parseInt(invoiceLength / invoicesPerPage) + 1}</li>
             </ul>
+            <div className="invoicesPerPage">
+              Invoices per page: {invoicesPerPage}
+            </div>
           </div>
         </div>
       ) : (

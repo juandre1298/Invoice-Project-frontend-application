@@ -30,11 +30,21 @@
   flex-grow: 4;
 }
 .paginationArea {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 .paginationLinks {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.invoicesPerPage {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(243, 242, 242, 255);
+  margin: 0 4px;
+  right: 20px;
 }
 .paginationLinks li {
   padding: 4px 8px;
