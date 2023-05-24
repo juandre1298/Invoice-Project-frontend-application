@@ -2,13 +2,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import MyContext from "../contexts/userContext";
-
+// import dayjs
+import dayjs from "dayjs";
 // import getInvoices from api
 import {
   getInvoicesByRange,
   getInvoices,
   getInvoicesByRangeByClient,
 } from "../api/api";
+
+// import icons
+
+import { TbFileInvoice } from "react-icons/tb";
+import { FaCubes } from "react-icons/fa";
 
 export const InvoicesManager = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
@@ -35,6 +41,7 @@ export const InvoicesManager = () => {
     if (globalUser.status === "admin") {
       const getInvoicesFromApi = async () => {
         const invoicesImported = await getInvoices();
+        console.log(invoicesImported.length);
         setInvoiceLength(invoicesImported.length - 1);
       };
       getInvoicesFromApi();
@@ -45,7 +52,6 @@ export const InvoicesManager = () => {
           0,
           100000
         );
-        setInvoiceLength(invoicesImported.length - 1);
       };
       getInvoicesFromApi();
     }
@@ -53,9 +59,16 @@ export const InvoicesManager = () => {
   // handle page change
   useEffect(() => {
     const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
-    console.log(invoiceLength, invoicesPerPage, lastPage);
+    console.log(
+      "invoiceLength",
+      invoiceLength,
+      "invoicesPerPage",
+      invoicesPerPage,
+      "lastPage",
+      lastPage
+    );
     // change pagesButtonArray
-    if (currentaPage > 5) {
+    if (currentaPage > 5 && lastPage >= 9) {
       if (currentaPage > lastPage - 4) {
         setPagesButtonArray([
           1,
@@ -67,6 +80,7 @@ export const InvoicesManager = () => {
           parseInt(invoiceLength / invoicesPerPage) + 1 - 3,
           parseInt(invoiceLength / invoicesPerPage) + 1 - 2,
           parseInt(invoiceLength / invoicesPerPage) + 1 - 1,
+          parseInt(invoiceLength / invoicesPerPage) + 1,
         ]);
       } else {
         setPagesButtonArray([
@@ -78,10 +92,15 @@ export const InvoicesManager = () => {
           currentaPage + 1,
           currentaPage + 2,
           "...",
+          lastPage,
         ]);
       }
     } else {
-      setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "..."]);
+      if (lastPage > 9) {
+        setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "...", lastPage]);
+      } else {
+        setPagesButtonArray(Array.from({ length: lastPage }, (_, i) => i + 1));
+      }
     }
     // get invoices if admin
     if (globalUser.status === "admin") {
@@ -142,12 +161,16 @@ export const InvoicesManager = () => {
                     <tr key={i}>
                       <th>{invoice.id}</th>
                       <th>{invoice.userName}</th>
-                      <th>{invoice.createdAt}</th>
-                      <th>{invoice.subtotal}</th>
-                      <th>{invoice.discount}</th>
-                      <th>{invoice.total}</th>
-                      <th>voucher</th>
-                      <th>Products</th>
+                      <th>{dayjs(invoice.createdAt).format("DD/MM/YYYY")}</th>
+                      <th>$ {invoice.subtotal}</th>
+                      <th>{invoice.discount * 100}%</th>
+                      <th>$ {invoice.total}</th>
+                      <th className="tableIcons">
+                        <TbFileInvoice />
+                      </th>
+                      <th className="tableIcons">
+                        <FaCubes />
+                      </th>
                     </tr>
                   );
                 })}
@@ -161,24 +184,18 @@ export const InvoicesManager = () => {
                 return (
                   <li
                     key={i}
-                    onClick={() => {
-                      setCurrentaPage(e);
-                    }}
+                    onClick={
+                      e === "..."
+                        ? () => {}
+                        : () => {
+                            setCurrentaPage(e);
+                          }
+                    }
                   >
                     {e}
                   </li>
                 );
               })}
-
-              <li
-                onClick={() => {
-                  setCurrentaPage(
-                    parseInt(invoiceLength / invoicesPerPage) + 1
-                  );
-                }}
-              >
-                {parseInt(invoiceLength / invoicesPerPage) + 1}
-              </li>
             </ul>
             <div className="invoicesPerPage">
               Invoices per page: {invoicesPerPage}
