@@ -1,35 +1,64 @@
 .loginMain {
   height: 100vh;
-
-  background-color: #f3eae8;
+  color: rgb(47, 52, 62);
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  gap: 16px;
+  padding: 0 4rem;
+  max-width: 1366px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.companyPresentation {
+  width: 40%;
+}
+.companyPresentation h1 {
+  color: rgba(41, 49, 60, 255);
+  font-size: 2rem;
+  font-family: "Archivo Black", sans-serif;
+  margin: 18px;
+}
+.companyPresentation p {
+  text-align: center;
+  line-height: 1.6;
 }
 .loginBox {
-  background-color: #130f20;
   padding: 2rem 4rem;
-  color: #f3eae8;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   gap: 24px;
-  border-radius: 1rem;
+  border: 2px solid rgba(47, 52, 62, 0.3);
+  border-radius: 8px;
 }
 .loginForm {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   flex-direction: column;
 }
 .loginForm input {
-  width: 100%;
-  border: none;
-  border-radius: 2px;
+  border: 2px solid rgba(47, 52, 62, 0.3);
+  padding: 12px 8px;
+  border-radius: 4px;
 }
+.inputTxt,
+.subminBtn {
+  width: 250px;
+}
+.subminBtn {
+  background-color: rgba(41, 49, 60, 255);
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 270px;
+}
+
 .createAccountLink {
-  color: orange;
+  color: rgb(76, 124, 162);
 }
 .createAccountLink:hover {
-  color: red;
+  color: orange;
 }

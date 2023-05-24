@@ -54,46 +54,63 @@ export const Login = () => {
   };
   return (
     <section className="loginMain">
-      {globalStatus ? (
-        <div>
-          <h1>You are already logged, wanna logout?</h1>
-          <button onClick={handleLogoutClick}>Logout</button>
-        </div>
-      ) : (
-        <div className="loginBox">
-          <h1>Login</h1>
-          <form className="loginForm" onSubmit={handleSubmit}>
-            <div>
-              <label for="fname">User:</label>
-              <br />
-              <input
-                type="text"
-                id="user"
-                name="user"
-                onChange={(event) => {
-                  setUserEmail(event.target.value);
-                }}
-              ></input>
-            </div>
-            <div>
-              <label for="fname">Password:</label>
-              <br />
-              <input
-                type="password"
-                id="password"
-                name="password"
-                onChange={(event) => {
-                  setUserPassword(event.target.value);
-                }}
-              ></input>
-            </div>
-            <input type="submit" value="submit" />
-            <Link className="createAccountLink" to="/register">
-              don't have an account yet?
-            </Link>
-          </form>
-        </div>
-      )}
+      <div className="companyPresentation">
+        <h1>Log in</h1>
+        <p>
+          We are an international IT consulting firm, focused on software
+          development. We use cutting-edge technologies and an innovative
+          methodology throughout all lifecycle phases of design and
+          implementation for large-scale systems. Our commitment, technical
+          expertise, and excellent location allow us to present an innovative
+          and bright solution to worldwide customers.
+        </p>
+      </div>
+      <div className="loginBox">
+        <img src="LogoAim_Edge.jpg" alt="logo" />
+        {globalStatus ? (
+          <div>
+            <h1>You are already logged, wanna logout?</h1>
+            <button onClick={handleLogoutClick}>Logout</button>
+          </div>
+        ) : (
+          <div>
+            <form className="loginForm" onSubmit={handleSubmit}>
+              <div>
+                <label for="fname">User:</label>
+                <br />
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  className="inputTxt"
+                  placeholder="example@email.com"
+                  onChange={(event) => {
+                    setUserEmail(event.target.value);
+                  }}
+                ></input>
+              </div>
+              <div>
+                <label for="fname">Password:</label>
+                <br />
+                <input
+                  type="password"
+                  id="password"
+                  className="inputTxt"
+                  placeholder="Password"
+                  name="password"
+                  onChange={(event) => {
+                    setUserPassword(event.target.value);
+                  }}
+                ></input>
+              </div>
+              <input type="submit" value="submit" className="subminBtn" />
+              <Link className="createAccountLink" to="/register">
+                don't have an account yet?
+              </Link>
+            </form>
+          </div>
+        )}
+      </div>
     </section>
   );
 };
