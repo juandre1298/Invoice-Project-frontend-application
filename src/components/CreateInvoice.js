@@ -4,6 +4,7 @@ import { getUsers, getProducts } from "../api/api";
 
 // import icons
 import { BsImage } from "react-icons/bs";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export const CreateInvoice = (props) => {
   const { showInvoiceCreator, setShowInvoiceCreator } = props;
@@ -20,8 +21,11 @@ export const CreateInvoice = (props) => {
   const [product, setProduct] = useState("");
   const [productQuantity, setProductQuantity] = useState(1);
   const [products, setProducts] = useState([]);
-
   const [imageFile, setImageFile] = useState("");
+
+  // invoice calculations
+  const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
 
   // loading controllers
   const [productsAndClientsLoading] = useState(true);
@@ -50,19 +54,29 @@ export const CreateInvoice = (props) => {
 
   // handleAddProduct
   const handleAddProduct = () => {
-    setProducts([
-      ...products,
-      {
-        clientProductId: productsForSale.filter((e) => e.name === product)[0]
-          .clientId,
-        name: product,
-        quantity: productQuantity,
-      },
-    ]);
-
-    console.log(products);
+    if (product) {
+      setProducts([
+        ...products,
+        {
+          id: new Date().getTime(),
+          clientProductId: productsForSale.filter((e) => e.name === product)[0]
+            .clientId,
+          name: product,
+          quantity: productQuantity,
+        },
+      ]);
+    } else {
+      alert("You must select a product.");
+    }
   };
-
+  // handleDeletProduct
+  const handleDeletProduct = (id) => {
+    setProducts(
+      products.filter((e) => {
+        return e.id != id;
+      })
+    );
+  };
   // handle Submit
   const handleSubmitInvoice = () => {
     console.log("add", dateOfPurchase, client, discount, products, imageFile);
@@ -171,14 +185,27 @@ export const CreateInvoice = (props) => {
                     <th>Product ID</th>
                     <th>Quantity</th>
                     <th>Product Name</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
+
                 <tbody>
-                  <tr>
-                    <th>Product ID</th>
-                    <th>Quantity</th>
-                    <th>Product Name</th>
-                  </tr>
+                  {products.map((e) => (
+                    <tr>
+                      <td>{e.clientProductId}</td>
+                      <td>{e.quantity}</td>
+                      <td>{e.name}</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            handleDeletProduct(e.id);
+                          }}
+                        >
+                          <RiDeleteBin6Line />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
