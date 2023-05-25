@@ -78,20 +78,12 @@ export const InvoicesManager = () => {
       };
       getInvoicesFromApi();
     }
-    console.log(invoiceLength);
   }, []);
 
   // handle page change
   useEffect(() => {
     const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
-    console.log(
-      "invoiceLength",
-      invoiceLength,
-      "invoicesPerPage",
-      invoicesPerPage,
-      "lastPage",
-      lastPage
-    );
+
     // change pagesButtonArray
     if (currentaPage > 5 && lastPage >= 9) {
       if (currentaPage > lastPage - 4) {
@@ -154,12 +146,8 @@ export const InvoicesManager = () => {
     }
   }, [currentaPage, loadingPages]);
   // handleProductDisplay
-  useEffect(() => {
-    console.log(invoceIdSelected, "was selected");
-  }, [showProducts]);
-  const handleProductDisplay = (invoice) => {
-    console.log(invoice.products);
-  };
+  useEffect(() => {}, [showProducts]);
+
   return (
     <section className="invoicesManager">
       {globalStatus ? (
@@ -201,7 +189,7 @@ export const InvoicesManager = () => {
                       <th>{invoice.userName}</th>
                       <th>{dayjs(invoice.createdAt).format("DD/MM/YYYY")}</th>
                       <th>$ {invoice.subtotal}</th>
-                      <th>{invoice.discount * 100}%</th>
+                      <th>{invoice.discount}%</th>
                       <th>$ {invoice.total}</th>
                       <th>
                         <button

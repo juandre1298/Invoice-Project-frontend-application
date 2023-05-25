@@ -1,7 +1,72 @@
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { getUsers, getProducts } from "../api/api";
+
+// import icons
 import { BsImage } from "react-icons/bs";
 
 export const CreateInvoice = (props) => {
   const { showInvoiceCreator, setShowInvoiceCreator } = props;
+
+  // form states
+  // display
+  const [productsForSale, setProductsForSale] = useState([]);
+  const [clients, setClients] = useState([]);
+
+  // inputs
+  const [dateOfPurchase, setDateOfPurchase] = useState();
+  const [client, setClient] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [product, setProduct] = useState("");
+  const [productQuantity, setProductQuantity] = useState(1);
+  const [products, setProducts] = useState([]);
+
+  const [imageFile, setImageFile] = useState("");
+
+  // loading controllers
+  const [productsAndClientsLoading] = useState(true);
+  // get clients and products
+  useEffect(() => {
+    const getUsersFromApi = async () => {
+      const users = await getUsers();
+      // sort users
+      users.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+
+      setClients(users);
+    };
+    getUsersFromApi();
+    // get products
+    const getProductsFromApi = async () => {
+      const productsFromApi = await getProducts();
+      // sort products
+      productsFromApi.sort((a, b) =>
+        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+      );
+
+      setProductsForSale(productsFromApi);
+    };
+    getProductsFromApi();
+  }, []);
+
+  // handleAddProduct
+  const handleAddProduct = () => {
+    setProducts([
+      ...products,
+      {
+        clientProductId: productsForSale.filter((e) => e.name === product)[0]
+          .clientId,
+        name: product,
+        quantity: productQuantity,
+      },
+    ]);
+
+    console.log(products);
+  };
+
+  // handle Submit
+  const handleSubmitInvoice = () => {
+    console.log("add", dateOfPurchase, client, discount, products, imageFile);
+  };
   return (
     <section className="InvoiceCreatorPopUpSection">
       <div
@@ -15,33 +80,91 @@ export const CreateInvoice = (props) => {
         <div className="invoiceCreatorForm">
           <div className="invoiceCreatorDetails">
             <h2>User Details</h2>
-            <from className="invoiceCreatorBoxContainer">
+            <div className="invoiceCreatorBoxContainer">
               <div className="invoiceCreatorDateDiv">
                 <label>Date*</label>
                 <br />
-                <input type="date" id="date" name="date" />
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  onChange={(e) => setDateOfPurchase(e.target.value)}
+                />
               </div>
               <div className="invoiceCreatorClientDiv">
                 <label>Client*</label>
                 <br />
-                <input type="text" id="date" name="date" />
+                <select
+                  id="dropdown"
+                  value={client}
+                  className="selectClient"
+                  onChange={(e) => {
+                    setClient(e.target.value);
+                  }}
+                >
+                  <option value="">Select</option>
+                  {clients.map((e) => {
+                    return (
+                      <option value={e.name} key={e.id}>
+                        {e.name}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
               <div className="invoiceCreatorDiscountDiv">
-                <label>Discount</label>
+                <label>Discount ( % )</label>
                 <br />
-                <input type="text" id="date" name="date" />
+                <input
+                  type="number"
+                  id="percentageInput"
+                  value={discount}
+                  onChange={(e) => {
+                    setDiscount(e.target.value);
+                  }}
+                  min="0"
+                  max="30"
+                  step="5"
+                />
               </div>
               <div className="invoiceCreatorProductDiv">
                 <label>Product*</label>
                 <br />
                 <div className="invoiceCreatorPorductContainer">
-                  <input type="text" id="date" name="date" />
-                  <p>1</p>
-                  <button>+</button>
+                  <select
+                    id="dropdown"
+                    value={product}
+                    className="selectProduct"
+                    onChange={(e) => {
+                      setProduct(e.target.value);
+                    }}
+                  >
+                    <option value="">Select</option>
+                    {productsForSale.map((e) => {
+                      return (
+                        <option value={e.name} key={e.id}>
+                          {e.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <input
+                    type="number"
+                    id="productQuantity"
+                    className="productQuantity"
+                    value={productQuantity}
+                    onChange={(e) => {
+                      setProductQuantity(e.target.value);
+                    }}
+                    min="1"
+                    step="1"
+                  />
+                  <button onClick={handleAddProduct}>+</button>
                 </div>
               </div>
-            </from>
-            <div>
+            </div>
+            {/* table section */}
+            <div className="productTableSection">
               <table>
                 <thead>
                   <tr>
@@ -50,6 +173,13 @@ export const CreateInvoice = (props) => {
                     <th>Product Name</th>
                   </tr>
                 </thead>
+                <tbody>
+                  <tr>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Product Name</th>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -62,7 +192,14 @@ export const CreateInvoice = (props) => {
           </div>
         </div>
         <div className="submitSection">
-          <submit className="submitSectionAddBtn">Add</submit>
+          <button
+            type="submit"
+            value="Add"
+            onClick={handleSubmitInvoice}
+            className="submitSectionAddBtn"
+          >
+            Add
+          </button>
           <button className="submitSectionCancelBtn">Cancel</button>
         </div>
       </div>
