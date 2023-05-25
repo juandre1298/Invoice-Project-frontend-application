@@ -2,9 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import MyContext from "../contexts/userContext";
+
 // import dayjs
+
 import dayjs from "dayjs";
+
 // import from api
+
 import {
   getInvoicesByRange,
   getInvoices,
@@ -12,7 +16,10 @@ import {
 } from "../api/api";
 
 // import components
+
 import { ProductDisplay } from "../components/ProductDisplay";
+import { CreateInvoice } from "../components/CreateInvoice";
+import { ImageDisplay } from "../components/ImageDisplay";
 
 // import icons
 
@@ -42,8 +49,10 @@ export const InvoicesManager = () => {
 
   const [currentaPage, setCurrentaPage] = useState(1);
   const [products, setProducts] = useState("");
-  const [showProducts, setShowProducts] = useState(false);
   const [invoceIdSelected, setInvoceIdSelected] = useState(0);
+  const [showProducts, setShowProducts] = useState(false);
+  const [showImage, setShowImage] = useState(false);
+  const [showInvoiceCreator, setShowInvoiceCreator] = useState(false);
 
   // get the total of pages
   useEffect(() => {
@@ -154,7 +163,14 @@ export const InvoicesManager = () => {
       {globalStatus ? (
         <div className="invoicesBox">
           {globalUser.status === "admin" ? (
-            <button className="addInvoice">+ &nbsp; Add Invoice</button>
+            <button
+              onClick={() => {
+                setShowInvoiceCreator(!showInvoiceCreator);
+              }}
+              className="addInvoice"
+            >
+              + &nbsp; Add Invoice
+            </button>
           ) : (
             ""
           )}
@@ -185,8 +201,15 @@ export const InvoicesManager = () => {
                       <th>$ {invoice.subtotal}</th>
                       <th>{invoice.discount * 100}%</th>
                       <th>$ {invoice.total}</th>
-                      <th className="tableIcons">
-                        <TbFileInvoice />
+                      <th>
+                        <button
+                          className="tableIcons"
+                          onClick={() => {
+                            setShowImage(!showImage);
+                          }}
+                        >
+                          <TbFileInvoice />
+                        </button>
                       </th>
                       <th>
                         <button
@@ -236,6 +259,8 @@ export const InvoicesManager = () => {
             </div>
           </div>
           {showProducts && <ProductDisplay products={products} />}
+          {showImage && <ImageDisplay />}
+          {showInvoiceCreator && <CreateInvoice />}
         </div>
       ) : (
         <>
