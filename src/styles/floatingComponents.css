@@ -1,0 +1,11 @@
+.floatingSection {
+  position: absolute;
+  height: 400px;
+  width: 600px;
+  background-color: white;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 40px;
+  padding: 50px;
+  position: fixed;
+  box-sizing: border-box;
+}

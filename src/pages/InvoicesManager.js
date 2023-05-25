@@ -4,12 +4,15 @@ import { Link } from "react-router-dom";
 import MyContext from "../contexts/userContext";
 // import dayjs
 import dayjs from "dayjs";
-// import getInvoices from api
+// import from api
 import {
   getInvoicesByRange,
   getInvoices,
   getInvoicesByRangeByClient,
 } from "../api/api";
+
+// import components
+import { ProductDisplay } from "../components/ProductDisplay";
 
 // import icons
 
@@ -25,7 +28,7 @@ export const InvoicesManager = () => {
   const [invoicesLoading, setInvoicesLoading] = useState(true);
   const [invoiceLength, setInvoiceLength] = useState(0);
   const [invoicesPerPage, setInvoicesPerPage] = useState(5);
-  const [currentaPage, setCurrentaPage] = useState(1);
+
   const [pagesButtonArray, setPagesButtonArray] = useState([
     1,
     2,
@@ -35,14 +38,21 @@ export const InvoicesManager = () => {
     6,
     "...",
   ]);
+  const [loadingPages, setLoadingPages] = useState(true);
+
+  const [currentaPage, setCurrentaPage] = useState(1);
+  const [products, setProducts] = useState("");
+  const [showProducts, setShowProducts] = useState(false);
+  const [invoceIdSelected, setInvoceIdSelected] = useState(0);
 
   // get the total of pages
   useEffect(() => {
     if (globalUser.status === "admin") {
       const getInvoicesFromApi = async () => {
+        setLoadingPages(true);
         const invoicesImported = await getInvoices();
-        console.log(invoicesImported.length);
-        setInvoiceLength(invoicesImported.length - 1);
+        setInvoiceLength(invoicesImported.length);
+        setLoadingPages(false);
       };
       getInvoicesFromApi();
     } else {
@@ -52,10 +62,14 @@ export const InvoicesManager = () => {
           0,
           100000
         );
+        setInvoiceLength(invoicesImported.length);
+        setLoadingPages(false);
       };
       getInvoicesFromApi();
     }
+    console.log(invoiceLength);
   }, []);
+
   // handle page change
   useEffect(() => {
     const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
@@ -127,9 +141,14 @@ export const InvoicesManager = () => {
       };
       getInvoicesFromApi();
     }
-  }, [currentaPage]);
-  // get elements by page
-
+  }, [currentaPage, loadingPages]);
+  // handleProductDisplay
+  useEffect(() => {
+    console.log(invoceIdSelected, "was selected");
+  }, [showProducts]);
+  const handleProductDisplay = (invoice) => {
+    console.log(invoice.products);
+  };
   return (
     <section className="invoicesManager">
       {globalStatus ? (
@@ -141,6 +160,7 @@ export const InvoicesManager = () => {
           )}
           <table>
             <thead>
+              {/* table headers */}
               <tr>
                 <th>#Invoice</th>
                 <th>Client</th>
@@ -168,8 +188,16 @@ export const InvoicesManager = () => {
                       <th className="tableIcons">
                         <TbFileInvoice />
                       </th>
-                      <th className="tableIcons">
-                        <FaCubes />
+                      <th>
+                        <button
+                          className="tableIcons"
+                          onClick={() => {
+                            setShowProducts(!showProducts);
+                            setInvoceIdSelected(invoice.id);
+                          }}
+                        >
+                          <FaCubes />
+                        </button>
                       </th>
                     </tr>
                   );
@@ -180,27 +208,34 @@ export const InvoicesManager = () => {
           <div className="paginationArea">
             <div className="invoicesPerPage">Current page: {currentaPage}</div>
             <ul className="paginationLinks">
-              {pagesButtonArray.map((e, i) => {
-                return (
-                  <li
-                    key={i}
-                    onClick={
-                      e === "..."
-                        ? () => {}
-                        : () => {
-                            setCurrentaPage(e);
-                          }
-                    }
-                  >
-                    {e}
-                  </li>
-                );
-              })}
+              {loadingPages ? (
+                <p>loading pages...</p>
+              ) : (
+                <>
+                  {pagesButtonArray.map((e, i) => {
+                    return (
+                      <li
+                        key={i}
+                        onClick={
+                          e === "..."
+                            ? () => {}
+                            : () => {
+                                setCurrentaPage(e);
+                              }
+                        }
+                      >
+                        {e}
+                      </li>
+                    );
+                  })}
+                </>
+              )}
             </ul>
             <div className="invoicesPerPage">
               Invoices per page: {invoicesPerPage}
             </div>
           </div>
+          {showProducts && <ProductDisplay products={products} />}
         </div>
       ) : (
         <>

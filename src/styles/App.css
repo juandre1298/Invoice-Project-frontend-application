@@ -6,6 +6,9 @@
 
   /*   border: 0.5px dotted red; */
 }
+h1 {
+  color: black;
+}
 a {
   cursor: pointer;
 }

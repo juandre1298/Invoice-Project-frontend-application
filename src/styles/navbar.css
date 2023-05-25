@@ -12,6 +12,9 @@ nav {
   padding: 2rem 0;
   transition: transform 1s;
 }
+nav h1 {
+  color: white;
+}
 nav:hover {
   transform: translate(0);
 }
