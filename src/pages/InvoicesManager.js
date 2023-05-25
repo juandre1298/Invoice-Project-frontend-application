@@ -50,6 +50,8 @@ export const InvoicesManager = () => {
   const [currentaPage, setCurrentaPage] = useState(1);
   const [products, setProducts] = useState("");
   const [invoceIdSelected, setInvoceIdSelected] = useState(0);
+
+  // states that creates the popups
   const [showProducts, setShowProducts] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [showInvoiceCreator, setShowInvoiceCreator] = useState(false);
@@ -260,7 +262,12 @@ export const InvoicesManager = () => {
           </div>
           {showProducts && <ProductDisplay products={products} />}
           {showImage && <ImageDisplay />}
-          {showInvoiceCreator && <CreateInvoice />}
+          {showInvoiceCreator && (
+            <CreateInvoice
+              showInvoiceCreator={showInvoiceCreator}
+              setShowInvoiceCreator={setShowInvoiceCreator}
+            />
+          )}
         </div>
       ) : (
         <>
