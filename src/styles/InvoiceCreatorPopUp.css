@@ -184,3 +184,23 @@
 .productTableSection td {
   text-align: center;
 }
+.InvoiceCreatorTotalSection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.InvoiceCreatorTotalSection h2 {
+  font-size: medium;
+}
+
+.InvoiceCreatorTotalSection h3 {
+  font-weight: normal;
+  font-size: medium;
+}
+.InvoiceCreatorTotalSection div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}

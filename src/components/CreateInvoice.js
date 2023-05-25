@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { getUsers, getProducts } from "../api/api";
+import { getUsers, postInvoice, getProducts } from "../api/api";
 
 // import icons
 import { BsImage } from "react-icons/bs";
@@ -26,6 +26,7 @@ export const CreateInvoice = (props) => {
   // invoice calculations
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
+  const [discountPass, setDiscountPass] = useState(false);
 
   // loading controllers
   const [productsAndClientsLoading] = useState(true);
@@ -55,16 +56,21 @@ export const CreateInvoice = (props) => {
   // handleAddProduct
   const handleAddProduct = () => {
     if (product) {
-      setProducts([
-        ...products,
-        {
-          id: new Date().getTime(),
-          clientProductId: productsForSale.filter((e) => e.name === product)[0]
-            .clientId,
-          name: product,
-          quantity: productQuantity,
-        },
-      ]);
+      if (productQuantity > 0) {
+        setProducts([
+          ...products,
+          {
+            id: new Date().getTime(),
+            clientProductId: productsForSale.filter(
+              (e) => e.name === product
+            )[0].clientId,
+            name: product,
+            quantity: productQuantity,
+          },
+        ]);
+      } else {
+        alert("Please select a positive quantity");
+      }
     } else {
       alert("You must select a product.");
     }
@@ -77,9 +83,74 @@ export const CreateInvoice = (props) => {
       })
     );
   };
+  // calculate total and subtotal
+  useEffect(() => {
+    let temporalSubTotal = 0;
+    products.forEach((currentProduct) => {
+      temporalSubTotal =
+        temporalSubTotal +
+        productsForSale.filter((e) => e.name === currentProduct.name)[0].price *
+          currentProduct.quantity;
+    });
+    setSubtotal(temporalSubTotal);
+    setTotal(temporalSubTotal * (1 - discount / 100));
+  }, [products, discount]);
   // handle Submit
   const handleSubmitInvoice = () => {
-    console.log("add", dateOfPurchase, client, discount, products, imageFile);
+    // handle discount rules
+    let maxDiscount = 10;
+    const milisInYear = 1000 * 60 * 60 * 24 * 365.25;
+    if (client) {
+      const clientDateOfEntry = clients.filter((e) => {
+        return e.name === client;
+      })[0].dateOfEntry;
+
+      const clientTimeYears =
+        (Date.now() - new Date(clientDateOfEntry)) / milisInYear;
+
+      // if 1000> => 10% is not necessary since the starting is 10%
+      // if >3 years => 30%
+      if (clientTimeYears > 3) {
+        maxDiscount = 30;
+      }
+      // if 2000> => 45%
+      if (subtotal > 2000) {
+        maxDiscount = 45;
+      }
+      if (discount > maxDiscount) {
+        alert(
+          `We are sorry but the discount is greater than the maximum permit of ${maxDiscount}%`
+        );
+      } else {
+        setDiscountPass(true);
+      }
+    }
+    // check if the info is complete:
+    if (dateOfPurchase && client && products && total != 0 && discountPass) {
+      // create object
+      const userId = clients.filter((e) => {
+        return e.name === client;
+      })[0].id;
+
+      const invoiceOb = {
+        userId,
+        discount,
+        dateOfEntry: dateOfPurchase,
+        subtotal,
+        total,
+        imageFile,
+        products: products.map((e) => {
+          return { name: e.name, quantity: e.quantity };
+        }),
+      };
+      postInvoice(invoiceOb);
+      alert("Invoice created!");
+      setShowInvoiceCreator(false);
+    } else {
+      alert(
+        "Something is wrong; please be sure that all mandatory items (*) are filled."
+      );
+    }
   };
   return (
     <section className="InvoiceCreatorPopUpSection">
@@ -137,7 +208,7 @@ export const CreateInvoice = (props) => {
                     setDiscount(e.target.value);
                   }}
                   min="0"
-                  max="30"
+                  max="45"
                   step="5"
                 />
               </div>
@@ -188,7 +259,6 @@ export const CreateInvoice = (props) => {
                     <th>Delete</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {products.map((e) => (
                     <tr>
@@ -216,6 +286,20 @@ export const CreateInvoice = (props) => {
               <BsImage className="imageIcon" />
             </div>
             <button>select Image</button>
+            <div className="InvoiceCreatorTotalSection">
+              <div>
+                <h2>Subtotal:</h2>
+                <h3>${subtotal.toFixed(2)}</h3>
+              </div>
+              <div>
+                <h2>Discount:</h2>
+                <h3>{discount}%</h3>
+              </div>
+              <div>
+                <h2 className="InvoiceCreatorTotal">Total:</h2>
+                <h3>${total.toFixed(2)}</h3>
+              </div>
+            </div>
           </div>
         </div>
         <div className="submitSection">
@@ -227,7 +311,14 @@ export const CreateInvoice = (props) => {
           >
             Add
           </button>
-          <button className="submitSectionCancelBtn">Cancel</button>
+          <button
+            className="submitSectionCancelBtn"
+            onClick={() => {
+              setShowInvoiceCreator(false);
+            }}
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </section>

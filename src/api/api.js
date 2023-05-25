@@ -84,3 +84,13 @@ export const getInvoicesByRangeByClient = async (clientId, start, end) => {
     console.log(err);
   }
 };
+
+// post new invoice
+export const postInvoice = async (invoiceOb) => {
+  try {
+    let url = "http://localhost:4000/invoices";
+    const response = await axios.post(url, invoiceOb);
+  } catch (error) {
+    console.log(error);
+  }
+};
