@@ -28,8 +28,10 @@ export const CreateInvoice = (props) => {
   const [total, setTotal] = useState(0);
   const [discountPass, setDiscountPass] = useState(false);
 
-  // loading controllers
+  //  controllers
   const [productsAndClientsLoading] = useState(true);
+  const [maxDiscount, setMaxDiscount] = useState(10);
+
   // get clients and products
   useEffect(() => {
     const getUsersFromApi = async () => {
@@ -98,7 +100,7 @@ export const CreateInvoice = (props) => {
   // handle Submit
   const handleSubmitInvoice = () => {
     // handle discount rules
-    let maxDiscount = 10;
+
     const milisInYear = 1000 * 60 * 60 * 24 * 365.25;
     if (client) {
       const clientDateOfEntry = clients.filter((e) => {
@@ -111,22 +113,26 @@ export const CreateInvoice = (props) => {
       // if 1000> => 10% is not necessary since the starting is 10%
       // if >3 years => 30%
       if (clientTimeYears > 3) {
-        maxDiscount = 30;
+        setMaxDiscount(30);
       }
       // if 2000> => 45%
       if (subtotal > 2000) {
-        maxDiscount = 45;
+        setMaxDiscount(45);
       }
       if (discount > maxDiscount) {
         alert(
           `We are sorry but the discount is greater than the maximum permit of ${maxDiscount}%`
         );
-      } else {
-        setDiscountPass(true);
       }
     }
     // check if the info is complete:
-    if (dateOfPurchase && client && products && total != 0 && discountPass) {
+    if (
+      dateOfPurchase &&
+      client &&
+      products &&
+      total != 0 &&
+      discount <= maxDiscount
+    ) {
       // create object
       const userId = clients.filter((e) => {
         return e.name === client;

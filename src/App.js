@@ -20,7 +20,7 @@ import "./styles/login.css";
 import "./styles/register.css";
 import "./styles/navbar.css";
 import "./styles/invoicesManager.css";
-import "./styles/floatingComponents.css";
+import "./styles/productDisplay.css";
 import "./styles/InvoiceCreatorPopUp.css";
 
 // import for router

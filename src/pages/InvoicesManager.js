@@ -187,7 +187,8 @@ export const InvoicesManager = () => {
                     <tr key={i}>
                       <th>{invoice.id}</th>
                       <th>{invoice.userName}</th>
-                      <th>{dayjs(invoice.createdAt).format("DD/MM/YYYY")}</th>
+                      <th>{dayjs(invoice.dateOfEntry).format("DD/MM/YYYY")}</th>
+
                       <th>$ {invoice.subtotal}</th>
                       <th>{invoice.discount}%</th>
                       <th>$ {invoice.total}</th>
@@ -205,8 +206,8 @@ export const InvoicesManager = () => {
                         <button
                           className="tableIcons"
                           onClick={() => {
-                            setShowProducts(!showProducts);
                             setInvoceIdSelected(invoice.id);
+                            setShowProducts(!showProducts);
                           }}
                         >
                           <FaCubes />
@@ -248,7 +249,13 @@ export const InvoicesManager = () => {
               Invoices per page: {invoicesPerPage}
             </div>
           </div>
-          {showProducts && <ProductDisplay products={products} />}
+          {showProducts && (
+            <ProductDisplay
+              invoceIdSelected={invoceIdSelected}
+              showProducts={showProducts}
+              setShowProducts={setShowProducts}
+            />
+          )}
           {showImage && <ImageDisplay />}
           {showInvoiceCreator && (
             <CreateInvoice

@@ -62,6 +62,18 @@ export const getInvoices = async () => {
     console.log(err);
   }
 };
+// get invoice by id
+export const getInvoiceById = async (id) => {
+  try {
+    let url = `http://localhost:4000/invoices/${id}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // get invoices by range
 export const getInvoicesByRange = async (start, end) => {
   try {
