@@ -41,8 +41,9 @@ export const Navbar = () => {
             <span>Invoices</span>
           </Link>
         </li>
-        <li className="invoiceCreatorOnNavbar">
-          {globalUser.status === "admin" ? (
+
+        {globalUser.status === "admin" ? (
+          <li className="invoiceCreatorOnNavbar">
             <button
               onClick={() => {
                 setShowInvoiceCreator(!showInvoiceCreator);
@@ -51,10 +52,10 @@ export const Navbar = () => {
             >
               + &nbsp; Add Invoice
             </button>
-          ) : (
-            ""
-          )}
-        </li>
+          </li>
+        ) : (
+          ""
+        )}
       </ul>
       <div className="logoutBtnArea">
         {globalStatus ? (

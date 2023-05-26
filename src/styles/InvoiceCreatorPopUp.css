@@ -36,6 +36,9 @@
 
   flex-direction: column;
 }
+.InvoiceCreatorPopUpBox h1 {
+  font-size: x-large;
+}
 .invoiceCreatorForm {
   display: flex;
   justify-content: space-around;
@@ -63,6 +66,9 @@
   box-sizing: border-box;
   width: 100%;
   border: 1px solid rgb(191, 191, 191);
+}
+.deleteBtn {
+  font-size: 20px;
 }
 .selectProduct {
   width: 120px;
@@ -146,6 +152,7 @@
   margin-right: 8px;
   font-weight: bold;
   border-radius: 4px;
+  background-color: rgb(170, 170, 170);
 }
 .submitSectionAddBtn {
   background-color: rgb(34, 38, 39);
@@ -203,4 +210,42 @@
   justify-content: space-between;
   align-items: center;
   gap: 4px;
+}
+@media screen and (max-width: 740px) {
+  .InvoiceCreatorPopUpBox {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .invoiceCreatorForm {
+    justify-content: start;
+    flex-direction: column;
+    overflow-y: scroll;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-top: rgb(170, 170, 170) 1px solid;
+    padding: 10px;
+  }
+  .invoiceCreatorBoxContainer {
+    grid-template-columns: 1fr;
+  }
+  .invoiceCreatorDetails {
+    width: 100%;
+    border-right: none;
+  }
+  /* .invoiceCreatorPorductContainer s */
+  .invoiceCreatorPorductContainer .productQuantity {
+    width: 40px;
+  }
+  .selectProduct {
+    width: 100%;
+  }
+  .invoiceCreatorVoucher {
+    width: 100%;
+  }
+  .productTableSection {
+    border: 1px solid rgb(170, 170, 170);
+  }
+  .submitSection {
+    text-align: center;
+  }
 }

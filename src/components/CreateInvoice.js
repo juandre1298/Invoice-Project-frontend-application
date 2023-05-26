@@ -268,11 +268,12 @@ export const CreateInvoice = (props) => {
                 <tbody>
                   {products.map((e) => (
                     <tr>
-                      <td>{e.clientProductId}</td>
-                      <td>{e.quantity}</td>
-                      <td>{e.name}</td>
-                      <td>
+                      <td data-title="Id">{e.clientProductId}</td>
+                      <td data-title="Quantity">{e.quantity}</td>
+                      <td data-title="Name">{e.name}</td>
+                      <td data-title="Delete">
                         <button
+                          className="deleteBtn"
                           onClick={() => {
                             handleDeletProduct(e.id);
                           }}
