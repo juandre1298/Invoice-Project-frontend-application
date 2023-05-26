@@ -4,11 +4,16 @@ import { postNewUser } from "../api/api";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
+  // add context
+
+  //
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [secondName, setSecondName] = useState("");
+  const [pointOfContact, setPointOfContact] = useState("");
   //const [bornDate, setBornDate] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumer, setPhoneNumber] = useState("");
+  const [dateOfEntry, setDateOfEntry] = useState(Date.now());
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   //const [gender, setGender] = useState("");
@@ -17,7 +22,7 @@ export const Register = () => {
 
     if (
       name &&
-      secondName &&
+      pointOfContact &&
       //bornDate &&
       email &&
       password === password2
@@ -28,13 +33,14 @@ export const Register = () => {
       );
       postNewUser({
         name,
-        second_name: secondName,
+        pointOfContact,
         // born_date: bornDate,
         email,
         password,
         // gender,
       });
-      navigate("/");
+
+      navigate("/login");
     } else {
       alert("Something is missing, please check that all boxes are filled");
     }
@@ -44,96 +50,77 @@ export const Register = () => {
       <div className="registerBox">
         <h1>Register New User</h1>
         <form className="registerForm" onSubmit={handleSubmit}>
-          <label>name</label>
-          <input
-            type="text"
-            onChange={(event) => {
-              setName(event.target.value);
-            }}
-            id="name"
-            name="name"
-          ></input>
-          <label>second name</label>
-          <input
-            type="text"
-            onChange={(event) => {
-              setSecondName(event.target.value);
-            }}
-            id="secondName"
-            name="secondName"
-          ></input>
-
-          {/*       <label>born date</label>
-           <input
-            type="date"
-            onChange={(event) => {
-              setBornDate(event.target.value);
-            }}
-            id="bornDate"
-            name="bornDate"
-          ></input> */}
-          <label>email</label>
-          <input
-            type="email"
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
-            id="email"
-            name="email"
-          ></input>
-          <label>password</label>
-          <input
-            type="password"
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
-            id="password"
-            name="password"
-          ></input>
-          <label style={password === password2 ? {} : { color: "red" }}>
-            repeat password
-          </label>
-          <input
-            type="password"
-            onChange={(event) => {
-              setPassword2(event.target.value);
-            }}
-            id="password"
-            name="password"
-          ></input>
-          {/*   <div>
+          <div>
+            <label>name</label>
             <input
-              type="radio"
-              id="Male"
-              name="drone"
-              value="Male"
+              type="text"
               onChange={(event) => {
-                setGender(event.target.value);
+                setName(event.target.value);
               }}
-            />
-            <label for="huey">Male</label>
+              id="name"
+              name="name"
+            ></input>
+          </div>
+          <div>
+            <label>email</label>
             <input
-              type="radio"
-              id="Female"
-              name="drone"
-              value="Female"
+              type="email"
               onChange={(event) => {
-                setGender(event.target.value);
+                setEmail(event.target.value);
               }}
-            />
-            <label for="dewey">Female</label>
+              id="email"
+              name="email"
+            ></input>
+          </div>
+          <div>
+            <label>password</label>
             <input
-              type="radio"
-              id="Other"
-              name="drone"
-              value="Other"
+              type="password"
               onChange={(event) => {
-                setGender(event.target.value);
+                setPassword(event.target.value);
               }}
-            />
-            <label for="louie">Other</label>
-          </div> */}
-          <input type="submit" value="submit" />
+              id="password"
+              name="password"
+            ></input>
+          </div>
+          <div>
+            <label style={password === password2 ? {} : { color: "red" }}>
+              repeat password
+            </label>
+            <input
+              type="password"
+              onChange={(event) => {
+                setPassword2(event.target.value);
+              }}
+              id="password"
+              name="password"
+            ></input>
+          </div>
+          <div>
+            <label>Point Of Contact</label>
+            <input
+              type="text"
+              onChange={(event) => {
+                setPointOfContact(event.target.value);
+              }}
+              id="pointOfContact"
+              name="pointOfContact"
+            ></input>
+          </div>
+          <div>
+            <label>Phone Numer</label>
+            <input
+              type="text"
+              onChange={(event) => {
+                setPhoneNumber(event.target.value);
+              }}
+              id="phoneNumer"
+              name="phoneNumer"
+            ></input>
+          </div>
+          <div className="submitBtnSection">
+            <input type="submit" value="Sign In" />
+          </div>
         </form>
       </div>
     </div>

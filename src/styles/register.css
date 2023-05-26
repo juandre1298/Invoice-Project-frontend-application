@@ -1,32 +1,54 @@
 .registerMain {
   height: 100vh;
-  background-color: #f3eae8;
+  color: rgb(47, 52, 62);
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  gap: 16px;
+  padding: 0 4rem;
+  max-width: 1366px;
+  margin-right: auto;
+  margin-left: auto;
 }
 .registerBox {
-  background-color: #130f20;
   padding: 2rem 4rem;
-  color: #f3eae8;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   gap: 24px;
-  border-radius: 1rem;
+  border: 2px solid rgba(47, 52, 62, 0.3);
+  border-radius: 8px;
 }
 .registerForm {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
+}
+
+.registerForm div {
+  display: flex;
   flex-direction: column;
 }
-.egisterForm input {
-  width: 100%;
-  border: none;
-  border-radius: 2px;
+.registerForm input {
+  padding: 4px;
 }
 label {
   text-transform: capitalize;
   font-weight: bold;
+}
+.submitBtnSection {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.submitBtnSection input {
+  padding: 10px 0;
+  background-color: rgb(41, 49, 60);
+  color: white;
+  border: none;
+  font-size: larger;
 }
