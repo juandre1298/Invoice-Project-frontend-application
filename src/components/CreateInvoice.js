@@ -7,7 +7,13 @@ import { BsImage } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 export const CreateInvoice = (props) => {
-  const { showInvoiceCreator, setShowInvoiceCreator } = props;
+  const {
+    showInvoiceCreator,
+    setShowInvoiceCreator,
+    setInvoceImgSelected,
+    showImage,
+    setShowImage,
+  } = props;
 
   // form states
   // display
@@ -21,7 +27,7 @@ export const CreateInvoice = (props) => {
   const [product, setProduct] = useState("");
   const [productQuantity, setProductQuantity] = useState(1);
   const [products, setProducts] = useState([]);
-  const [imageFile, setImageFile] = useState("");
+  const [imageFile, setImageFile] = useState([]);
 
   // invoice calculations
   const [subtotal, setSubtotal] = useState(0);
@@ -97,6 +103,16 @@ export const CreateInvoice = (props) => {
     setSubtotal(temporalSubTotal);
     setTotal(temporalSubTotal * (1 - discount / 100));
   }, [products, discount]);
+  //handle image selection
+  const handleImageSelector = (event) => {
+    const selectedFile = event.target.files;
+
+    const selectedFilesArray = Array.from(selectedFile);
+    const imagesArray = selectedFilesArray.map((file) => {
+      return URL.createObjectURL(file);
+    });
+    setImageFile(imagesArray);
+  };
   // handle Submit
   const handleSubmitInvoice = () => {
     // handle discount rules
@@ -158,6 +174,7 @@ export const CreateInvoice = (props) => {
       );
     }
   };
+
   return (
     <section className="InvoiceCreatorPopUpSection">
       <div
@@ -289,10 +306,38 @@ export const CreateInvoice = (props) => {
           </div>
           <div className="invoiceCreatorVoucher">
             <h2>Voucher</h2>
-            <div>
-              <BsImage className="imageIcon" />
-            </div>
-            <button>select Image</button>
+
+            <label for="inputTag" className="invoiceImageButtonLable">
+              <div>
+                {imageFile.length > 0 ? (
+                  <>
+                    {imageFile.map((e, i) => {
+                      return (
+                        <div
+                          onClick={() => {
+                            setInvoceImgSelected(e);
+                            setShowImage(!showImage);
+                          }}
+                        >
+                          <img src={e} className="imageIcon" />
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <div>
+                    <BsImage className="imageIcon" />
+                    <input
+                      id="inputTag"
+                      type="file"
+                      name="image"
+                      accept="image/png, image/jpg, image/gif, image/jpeg"
+                      onChange={handleImageSelector}
+                    />
+                  </div>
+                )}
+              </div>
+            </label>
             <div className="InvoiceCreatorTotalSection">
               <div>
                 <h2>Subtotal:</h2>

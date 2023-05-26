@@ -278,6 +278,9 @@ export const InvoicesManager = () => {
           )}
           {showInvoiceCreator && (
             <CreateInvoice
+              setInvoceImgSelected={setInvoceImgSelected}
+              showImage={showImage}
+              setShowImage={setShowImage}
               showInvoiceCreator={showInvoiceCreator}
               setShowInvoiceCreator={setShowInvoiceCreator}
             />

@@ -13,9 +13,19 @@ export const ImageDisplay = (props) => {
         }}
       ></div>
       <div className="imageDisplayPopUpBox">
-        <h1>Voucher # {invoceIdSelected}</h1>
+        {invoceIdSelected ? (
+          <h1>Voucher # {invoceIdSelected}</h1>
+        ) : (
+          <h1>Image Preview</h1>
+        )}
         <div className="imageDisplayPhotoSection">
-          <BsImage className="imageDisplayPhotoSectionIcon" />
+          {invoceImgSelected ? (
+            <div className="imageSelectedPreviewContainer">
+              <img className="imageSelectedPreview" src={invoceImgSelected} />
+            </div>
+          ) : (
+            <BsImage className="imageDisplayPhotoSectionIcon" />
+          )}
         </div>
       </div>
     </section>

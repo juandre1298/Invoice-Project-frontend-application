@@ -131,6 +131,8 @@
   height: 120px;
   width: 140px;
   color: rgb(191, 191, 191);
+  object-fit: cover;
+  border-radius: 5px;
 }
 .invoiceCreatorVoucher button {
   background-color: rgb(34, 38, 39);
@@ -210,6 +212,46 @@
   justify-content: space-between;
   align-items: center;
   gap: 4px;
+}
+.invoiceImageButtonLable {
+  width: 100%;
+  box-sizing: content-box;
+  padding-left: auto;
+  padding-right: auto;
+}
+.invoiceImageButtonLable div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.invoiceImageButtonLable input {
+  color: transparent;
+  width: 100%;
+  box-sizing: content-box;
+}
+.invoiceImageButtonLable input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.invoiceImageButtonLable input::before {
+  content: "Select Image";
+  color: white;
+  display: inline-block;
+  background-color: rgb(34, 38, 39);
+  border: none;
+  padding: 5px 8px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+#inputTag {
+  border-radius: 4px;
+  width: 95px;
+  box-sizing: border-box;
 }
 @media screen and (max-width: 740px) {
   .InvoiceCreatorPopUpBox {
