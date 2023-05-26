@@ -38,7 +38,7 @@ export const Login = () => {
             "! welcome back!"
         );
         setGlobalStatus(true);
-        navigate("/");
+        navigate("/InvoicesManager");
       } else {
         alert("Wrong password, please try again");
       }

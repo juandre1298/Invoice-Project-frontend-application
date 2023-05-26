@@ -64,7 +64,6 @@
   background-color: rgb(26, 27, 27);
 }
 .loadingInvoicesBox {
-  position: absolute;
   bottom: 30%;
   left: 50%;
   height: 150px;
@@ -98,4 +97,59 @@ tbody th {
 thead th {
   padding-top: 20px;
   padding-bottom: 20px;
+}
+/* 360×640 – 12.98%  */
+@media screen and (max-width: 400px) {
+}
+
+/* 1280×800 – 7.38% */
+@media screen and (max-width: 1024px) {
+  .invoicesManager {
+    padding: 0;
+    height: 100hv;
+  }
+  .loadingInvoicesBox {
+    left: 25%;
+  }
+}
+/* 768×1024 – 6.11% */
+@media screen and (max-width: 740px) {
+  .invoicesManager {
+    margin-top: 100px;
+    height: inherit;
+  }
+  .invoicesBox {
+    border-radius: 10px;
+    margin: 0;
+    padding: 0;
+  }
+  .invoicesBox table thead tr {
+    display: none;
+  }
+  .invoicesBox table tr {
+    display: block;
+    padding: 20px;
+  }
+  table,
+  td,
+  th {
+    border-top: none;
+    border-bottom: none;
+  }
+  .invoicesBox table td {
+    text-align: right;
+    display: block;
+  }
+  .invoicesBox table td::before {
+    content: attr(data-title) ": ";
+    float: left;
+  }
+  .invoicesBox tbody tr:nth-child(even) {
+    background-color: rgb(191, 191, 191);
+  }
+  .paginationArea,
+  .paginationLinks {
+    flex-wrap: wrap;
+    margin: 8px;
+  }
 }

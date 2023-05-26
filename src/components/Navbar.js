@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useRef, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // icons
@@ -12,14 +12,21 @@ import { useLogout } from "../functions/handleLogout";
 
 export const Navbar = () => {
   // import global data
-  const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
-    useContext(MyContext);
+  const {
+    globalUser,
+    setGlobalUser,
+    globalStatus,
+    setGlobalStatus,
+    showInvoiceCreator,
+    setShowInvoiceCreator,
+  } = useContext(MyContext);
   // import handle logout hook
   const handleLogout = useLogout();
 
   const handleLogoutClick = () => {
     handleLogout();
   };
+
   // handle display and collapse
   const [minNav, setMinNav] = useState(false);
   return (
@@ -34,14 +41,25 @@ export const Navbar = () => {
             <span>Invoices</span>
           </Link>
         </li>
+        <li className="invoiceCreatorOnNavbar">
+          {globalUser.status === "admin" ? (
+            <button
+              onClick={() => {
+                setShowInvoiceCreator(!showInvoiceCreator);
+              }}
+              className="addInvoice  "
+            >
+              + &nbsp; Add Invoice
+            </button>
+          ) : (
+            ""
+          )}
+        </li>
       </ul>
       <div className="logoutBtnArea">
         {globalStatus ? (
           <div>
-            <button
-              className="logoutBtn iconAndText"
-              onClick={handleLogoutClick}
-            >
+            <button className="logoutBtn" onClick={handleLogoutClick}>
               <CgLogOut className="logoutIcon" />
               Log out
             </button>
@@ -51,15 +69,15 @@ export const Navbar = () => {
             Log in
           </Link>
         )}
-        <button
-          onClick={() => {
-            setMinNav(!minNav);
-          }}
-          className="minimize"
-        >
-          {minNav ? <MdNavigateBefore /> : <MdNavigateNext />}
-        </button>
       </div>
+      <button
+        onClick={() => {
+          setMinNav(!minNav);
+        }}
+        className="minimize"
+      >
+        {minNav ? <MdNavigateBefore /> : <MdNavigateNext />}
+      </button>
     </nav>
   );
 };

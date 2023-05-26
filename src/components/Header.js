@@ -6,25 +6,37 @@ import { useLogout } from "../functions/handleLogout";
 
 export const Header = () => {
   // import global data
-  const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
-    useContext(MyContext);
+  const {
+    globalUser,
+    setGlobalUser,
+    globalStatus,
+
+    setGlobalStatus,
+  } = useContext(MyContext);
   // import handle logout hook
   const handleLogout = useLogout();
 
   const handleLogoutClick = () => {
     handleLogout();
   };
-
+  const pagesTitle = {
+    "/": "Home",
+    "/login": "Login",
+    "/InvoicesManager": "Invoice",
+  };
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   useEffect(() => {
     setCurrentPath(window.location.pathname);
   }, []);
 
   return (
-    <header>
+    <header className="headerSection">
       <img src="LogoAim_Edge.jpg" alt="logo" />
+
       <div className="pathAndStatus">
-        <h1>{currentPath}</h1>
+        <h1>
+          {pagesTitle[currentPath] ? pagesTitle[currentPath] : currentPath}
+        </h1>
         <h2>{globalUser.status}</h2>
       </div>
     </header>

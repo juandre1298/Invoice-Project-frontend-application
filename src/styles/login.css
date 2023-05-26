@@ -62,3 +62,24 @@
 .createAccountLink:hover {
   color: orange;
 }
+
+/* 360×640 – 12.98%  */
+@media screen and (max-width: 400px) {
+  .loginBox {
+    border: none;
+    width: 100%;
+    height: 100vh;
+  }
+}
+/* 768×1024 – 6.11% */
+@media screen and (max-width: 800px) {
+  .companyPresentation {
+    display: none;
+  }
+  .loginMain {
+    justify-content: center;
+  }
+}
+/* 1280×800 – 7.38% */
+@media screen and (max-width: 1024px) {
+}

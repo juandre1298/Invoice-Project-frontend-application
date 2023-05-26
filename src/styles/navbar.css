@@ -68,6 +68,7 @@ nav:hover {
 .minimize {
   position: absolute;
   right: -12px;
+  bottom: 45px;
   color: white;
   border-radius: 100%;
   width: 32px;
@@ -78,4 +79,29 @@ nav:hover {
 }
 .minimize :hover {
   cursor: pointer;
+}
+.invoiceCreatorOnNavbar {
+  margin-top: 20px;
+}
+/* 360×640 – 12.98%  */
+@media screen and (max-width: 400px) {
+  .minimize {
+    position: absolute;
+    right: -70px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    font-size: 40px;
+    padding-top: 5px;
+  }
+  .navCollapse {
+    transform: translate(-250px);
+  }
+}
+/* 768×1024 – 6.11% */
+@media screen and (max-width: 800px) {
+}
+/* 1280×800 – 7.38% */
+@media screen and (max-width: 1024px) {
 }

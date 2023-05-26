@@ -53,9 +53,9 @@ export const ProductDisplay = (props) => {
                 <tbody>
                   {invoiceData.product.map((e) => (
                     <tr>
-                      <td>{e.clientId}</td>
-                      <td>{e.quantity}</td>
-                      <td>{e.name}</td>
+                      <td data-title="Id">{e.clientId}</td>
+                      <td data-title="Quantity">{e.quantity}</td>
+                      <td data-title="Name">{e.name}</td>
                     </tr>
                   ))}
                 </tbody>

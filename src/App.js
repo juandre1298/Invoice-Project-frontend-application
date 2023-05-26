@@ -46,6 +46,7 @@ function App() {
     return globalStatus ? JSON.parse(globalStatus) : "";
   });
   const [globalMinNav, globalSetMinNav] = useState(false);
+
   // save in localStorage the login and user info.
 
   useEffect(() => {
@@ -54,7 +55,8 @@ function App() {
   useEffect(() => {
     localStorage.setItem("globalStatus", JSON.stringify(globalStatus));
   }, [globalStatus]);
-
+  // invoice creator
+  const [showInvoiceCreator, setShowInvoiceCreator] = useState(false);
   // create the router structure and context provider
 
   const Layout = () => {
@@ -67,6 +69,9 @@ function App() {
           setGlobalStatus,
           globalMinNav,
           globalSetMinNav,
+
+          showInvoiceCreator,
+          setShowInvoiceCreator,
         }}
       >
         <Header />

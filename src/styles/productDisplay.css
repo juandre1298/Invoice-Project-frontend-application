@@ -63,3 +63,11 @@
   text-align: center;
   height: 46px;
 }
+@media screen and (max-width: 740px) {
+  .productDisplayTableSection td {
+    height: 100%;
+  }
+  .productDisplayTableSection {
+    overflow-y: scroll;
+  }
+}

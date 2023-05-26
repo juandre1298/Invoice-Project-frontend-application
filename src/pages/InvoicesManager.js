@@ -27,8 +27,14 @@ import { TbFileInvoice } from "react-icons/tb";
 import { FaCubes } from "react-icons/fa";
 
 export const InvoicesManager = () => {
-  const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
-    useContext(MyContext);
+  const {
+    globalUser,
+    setGlobalUser,
+    globalStatus,
+    setGlobalStatus,
+    showInvoiceCreator,
+    setShowInvoiceCreator,
+  } = useContext(MyContext);
 
   // general states
   const [invoices, setInvoices] = useState("");
@@ -55,7 +61,7 @@ export const InvoicesManager = () => {
   // states that creates the popups
   const [showProducts, setShowProducts] = useState(false);
   const [showImage, setShowImage] = useState(false);
-  const [showInvoiceCreator, setShowInvoiceCreator] = useState(false);
+
   const [invoceIdSelected, setInvoceIdSelected] = useState(0);
   const [invoceImgSelected, setInvoceImgSelected] = useState({});
 
@@ -188,14 +194,15 @@ export const InvoicesManager = () => {
                 {invoices.map((invoice, i) => {
                   return (
                     <tr key={i}>
-                      <th>{invoice.id}</th>
-                      <th>{invoice.userName}</th>
-                      <th>{dayjs(invoice.dateOfEntry).format("DD/MM/YYYY")}</th>
-
-                      <th>$ {invoice.subtotal}</th>
-                      <th>{invoice.discount}%</th>
-                      <th>$ {invoice.total}</th>
-                      <th>
+                      <td data-title="#Invoice">{invoice.id}</td>
+                      <td data-title="Client">{invoice.userName}</td>
+                      <td data-title="Date">
+                        {dayjs(invoice.dateOfEntry).format("DD/MM/YYYY")}
+                      </td>
+                      <td data-title="Subtotal">$ {invoice.subtotal}</td>
+                      <td data-title="Discount">{invoice.discount}%</td>
+                      <td data-title="Total">$ {invoice.total}</td>
+                      <td data-title="Voucher">
                         <button
                           className="tableIcons"
                           onClick={() => {
@@ -206,8 +213,8 @@ export const InvoicesManager = () => {
                         >
                           <TbFileInvoice />
                         </button>
-                      </th>
-                      <th>
+                      </td>
+                      <td data-title="Products">
                         <button
                           className="tableIcons"
                           onClick={() => {
@@ -217,7 +224,7 @@ export const InvoicesManager = () => {
                         >
                           <FaCubes />
                         </button>
-                      </th>
+                      </td>
                     </tr>
                   );
                 })}

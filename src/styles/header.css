@@ -1,4 +1,4 @@
-header {
+.headerSection {
   color: rgb(56, 58, 58);
   background-color: white;
   position: fixed;
@@ -39,4 +39,13 @@ nav {
 }
 .pathAndStatus h2 {
   text-transform: capitalize;
+}
+@media screen and (max-width: 1024px) {
+  .headerSection {
+    justify-content: center;
+  }
+
+  .pathAndStatus {
+    display: none;
+  }
 }
