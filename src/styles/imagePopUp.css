@@ -1,4 +1,4 @@
-.productDisplayFloatingSection {
+.imagePopUpfloatingSection {
   position: absolute;
   color: rgb(34, 38, 39);
   background-color: rgba(0, 0, 0, 0.2);
@@ -12,7 +12,7 @@
   justify-content: center;
   align-items: center;
 }
-.productDisplayOutOfBoxSection {
+.imagePopUpOutOfBoxSection {
   top: 0;
   bottom: 0;
   left: 0;
@@ -22,8 +22,7 @@
   justify-content: center;
   align-items: center;
 }
-
-.productDisplayPopUpBox {
+.imageDisplayPopUpBox {
   background-color: white;
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
   border-radius: 24px;
@@ -39,27 +38,17 @@
   gap: 20px;
   position: relative;
 }
-.productDisplayPopUpBox h1 {
+.imageDisplayPopUpBox h1 {
   font-size: xx-large;
 }
-
-/* table section */
-.productDisplayTableSection {
+.imageDisplayPhotoSection {
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imageDisplayPhotoSectionIcon {
   width: 100%;
-  margin-right: 10px;
-}
-.productDisplayTableSection table {
-  width: 100%;
-}
-.productDisplayTableSection th {
-  position: sticky;
-  top: -1px;
-  text-align: center;
-  background-color: white;
-  border-bottom: 1px solid rgb(170, 170, 170);
-}
-.productDisplayTableSection td {
-  text-align: center;
-  height: 46px;
+  height: 100%;
+  color: rgb(170, 170, 170);
 }

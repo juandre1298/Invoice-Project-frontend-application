@@ -21,7 +21,7 @@ export const ProductDisplay = (props) => {
     getInvoiceData();
   }, []);
   return (
-    <section className="floatingSection">
+    <section className="productDisplayFloatingSection">
       <div
         className="productDisplayOutOfBoxSection"
         onClick={() => {

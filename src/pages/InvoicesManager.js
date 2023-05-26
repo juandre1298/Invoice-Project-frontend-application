@@ -30,7 +30,7 @@ export const InvoicesManager = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
     useContext(MyContext);
 
-  // states
+  // general states
   const [invoices, setInvoices] = useState("");
   const [invoicesLoading, setInvoicesLoading] = useState(true);
   const [invoiceLength, setInvoiceLength] = useState(0);
@@ -49,12 +49,15 @@ export const InvoicesManager = () => {
 
   const [currentaPage, setCurrentaPage] = useState(1);
   const [products, setProducts] = useState("");
-  const [invoceIdSelected, setInvoceIdSelected] = useState(0);
+
+  // pop ups states
 
   // states that creates the popups
   const [showProducts, setShowProducts] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [showInvoiceCreator, setShowInvoiceCreator] = useState(false);
+  const [invoceIdSelected, setInvoceIdSelected] = useState(0);
+  const [invoceImgSelected, setInvoceImgSelected] = useState({});
 
   // get the total of pages
   useEffect(() => {
@@ -196,6 +199,8 @@ export const InvoicesManager = () => {
                         <button
                           className="tableIcons"
                           onClick={() => {
+                            setInvoceIdSelected(invoice.id);
+                            setInvoceImgSelected(invoice.image);
                             setShowImage(!showImage);
                           }}
                         >
@@ -256,7 +261,14 @@ export const InvoicesManager = () => {
               setShowProducts={setShowProducts}
             />
           )}
-          {showImage && <ImageDisplay />}
+          {showImage && (
+            <ImageDisplay
+              showImage={showImage}
+              setShowImage={setShowImage}
+              invoceIdSelected={invoceIdSelected}
+              invoceImgSelected={invoceImgSelected}
+            />
+          )}
           {showInvoiceCreator && (
             <CreateInvoice
               showInvoiceCreator={showInvoiceCreator}

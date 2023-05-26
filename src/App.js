@@ -22,6 +22,7 @@ import "./styles/navbar.css";
 import "./styles/invoicesManager.css";
 import "./styles/productDisplay.css";
 import "./styles/InvoiceCreatorPopUp.css";
+import "./styles/imagePopUp.css";
 
 // import for router
 import {
