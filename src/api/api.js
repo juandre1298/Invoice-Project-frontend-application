@@ -106,3 +106,15 @@ export const postInvoice = async (invoiceOb) => {
     console.log(error);
   }
 };
+// get secure URL of AWS S3 bucket
+
+export const getSecureUrl = async () => {
+  try {
+    let url = "http://localhost:4000/s3Url";
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};

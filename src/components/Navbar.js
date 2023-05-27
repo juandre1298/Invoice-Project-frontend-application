@@ -8,7 +8,7 @@ import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 
 // context
 import MyContext from "../contexts/userContext";
-import { useLogout } from "../functions/handleLogout";
+import { useLogout } from "../services/handleLogout";
 
 export const Navbar = () => {
   // import global data

@@ -6,8 +6,9 @@ import { getUsers, postInvoice, getProducts } from "../api/api";
 import { BsImage } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-// import uploat to google drive
+// import from api
 import { guardarArchivo } from "../api/uploatToDrive";
+import { getSecureUrl } from "../api/api";
 
 /////////////////////////////////////////////////////////////
 export const CreateInvoice = (props) => {
@@ -37,6 +38,7 @@ export const CreateInvoice = (props) => {
   const [imageFileForDrive, setImageFileForDrive] = useState("");
   const [imageObjectResponse, setImageObjectResponse] = useState("");
   const [uploadingFiles, setUploadingFiles] = useState(false);
+  const [urlForS3, setUrlForS3] = useState("");
 
   // invoice calculations
   const [subtotal, setSubtotal] = useState(0);
@@ -133,7 +135,7 @@ export const CreateInvoice = (props) => {
   };
 
   // handle Submit
-  const handleSubmitInvoice = () => {
+  const handleSubmitInvoice = async () => {
     // handle discount rules
     let max = maxDiscount;
     const milisInYear = 1000 * 60 * 60 * 24 * 365.25;
@@ -144,7 +146,7 @@ export const CreateInvoice = (props) => {
 
       const clientTimeYears =
         (Date.now() - new Date(clientDateOfEntry)) / milisInYear;
-      console.log(clientTimeYears);
+
       // if 1000> => 10% is not necessary since the starting is 10%
       // if >3 years => 30%
       if (clientTimeYears > 3) {
@@ -162,53 +164,76 @@ export const CreateInvoice = (props) => {
     }
     // check if the info is complete:
     if (dateOfPurchase && client && products && total != 0 && discount <= max) {
-      let imageUploadData = {};
-      // upload to google drive
-
       if (imageFileForDrive) {
         const file = imageFileForDrive.target.files[0]; //the file
-        const reader = new FileReader(); //this for convert to Base64
-        reader.readAsDataURL(imageFileForDrive.target.files[0]); //start conversion...
-        reader.onload = async function () {
-          try {
-            setUploadingFiles(true);
-            //.. once finished..
-            const rawLog = reader.result.split(",")[1]; //extract only thee file data part
-            const dataSend = {
-              dataReq: { data: rawLog, name: file.name, type: file.type },
-              fname: "uploadFilesToGoogleDrive",
-            }; //preapre info to send to API
-            const response = await fetch(
-              "https://script.google.com/macros/s/AKfycbw4txtjL418Y9FFV0DE3Q2RoNqVZASrKAdlafEqI8nCL1srrokwIq18lLClbxC3zGV9/exec", //your AppsScript URL
-              { method: "POST", body: JSON.stringify(dataSend) }
-            );
-            const data = await response.json();
-            // create object
-            // create object
+        // uploading to AWS S3
 
-            const userId = clients.filter((e) => {
-              return e.name === client;
-            })[0].id;
+        //     get secure url from server
 
-            const invoiceOb = {
-              userId,
-              discount,
-              dateOfEntry: dateOfPurchase,
-              subtotal,
-              total,
-              image: data?.url,
-              products: products.map((e) => {
-                return { name: e.name, quantity: e.quantity };
-              }),
-            };
-            postInvoice(invoiceOb);
-            alert("Invoice created!");
-            setShowInvoiceCreator(false);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        console.log(reader);
+        const { url } = await getSecureUrl();
+        console.log(url);
+        // post the image directly to the s3 bucket
+        try {
+          await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            body: file,
+          });
+          const imageUrl = url?.split("?")[0];
+          console.log(imageUrl);
+
+          // post request to server to store any extra data
+          // upload to google cloud
+        } catch (error) {
+          console.log(
+            "error fetching the url to AWS, will upload to google drive",
+            error
+          );
+          let imageUploadData = {};
+          const reader = new FileReader(); //this for convert to Base64
+          reader.readAsDataURL(imageFileForDrive.target.files[0]); //start conversion...
+          reader.onload = async function () {
+            try {
+              setUploadingFiles(true);
+              //.. once finished..
+              const rawLog = reader.result.split(",")[1]; //extract only thee file data part
+              const dataSend = {
+                dataReq: { data: rawLog, name: file.name, type: file.type },
+                fname: "uploadFilesToGoogleDrive",
+              }; //preapre info to send to API
+              const response = await fetch(
+                "https://script.google.com/macros/s/AKfycbw4txtjL418Y9FFV0DE3Q2RoNqVZASrKAdlafEqI8nCL1srrokwIq18lLClbxC3zGV9/exec", //your AppsScript URL
+                { method: "POST", body: JSON.stringify(dataSend) }
+              );
+              const data = await response.json();
+              // create object
+
+              const userId = clients.filter((e) => {
+                return e.name === client;
+              })[0].id;
+
+              const invoiceOb = {
+                userId,
+                discount,
+                dateOfEntry: dateOfPurchase,
+                subtotal,
+                total,
+                image: data?.url,
+                products: products.map((e) => {
+                  return { name: e.name, quantity: e.quantity };
+                }),
+              };
+              postInvoice(invoiceOb);
+              alert("Invoice created!");
+              setShowInvoiceCreator(false);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          console.log(reader);
+        }
       } else {
         // create object
 
@@ -237,9 +262,7 @@ export const CreateInvoice = (props) => {
       );
     }
   };
-  useEffect(() => {
-    console.log("change", imageObjectResponse);
-  }, [imageObjectResponse]);
+
   return (
     <section className="InvoiceCreatorPopUpSection">
       <div

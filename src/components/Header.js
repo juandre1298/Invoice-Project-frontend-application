@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import MyContext from "../contexts/userContext";
-import { useLogout } from "../functions/handleLogout";
+import { useLogout } from "../services/handleLogout";
 
 export const Header = () => {
   // import global data

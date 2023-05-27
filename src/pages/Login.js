@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { checkLogin, getUserById } from "../api/api";
 import MyContext from "../contexts/userContext";
-import { useLogout } from "../functions/handleLogout";
+import { useLogout } from "../services/handleLogout";
 
 export const Login = () => {
   const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
