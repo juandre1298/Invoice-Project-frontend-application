@@ -81,12 +81,12 @@
   border-radius: 4px;
   background-color: rgb(191, 191, 191);
 }
-.invoiceCreatorDateDiv {
+/* .invoiceCreatorDateDiv {
 }
 .invoiceCreatorClientDiv {
 }
 .invoiceCreatorDiscountDiv {
-}
+} */
 .invoiceCreatorProductDiv div {
   display: flex;
 }
@@ -219,6 +219,7 @@
   padding-left: auto;
   padding-right: auto;
 }
+.invoiceImageButtonLable form,
 .invoiceImageButtonLable div {
   display: flex;
   justify-content: center;

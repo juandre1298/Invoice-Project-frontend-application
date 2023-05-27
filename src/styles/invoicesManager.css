@@ -64,14 +64,10 @@
   background-color: rgb(26, 27, 27);
 }
 .loadingInvoicesBox {
-  bottom: 30%;
-  left: 50%;
-  height: 150px;
-  width: 250px;
-  background-color: rgba(243, 242, 242, 255);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
   border-radius: 30px;
   color: black;
   font-weight: bold;
@@ -88,6 +84,7 @@ table {
 table,
 td,
 th {
+  text-align: center;
   border-top: 1px solid rgb(191, 191, 191);
   border-bottom: 1px solid rgb(191, 191, 191);
 }
@@ -152,4 +149,17 @@ thead th {
     flex-wrap: wrap;
     margin: 8px;
   }
+}
+.uploadingFiles {
+  position: absolute;
+  z-index: 500;
+  background-color: white;
+  height: 150px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
 }

@@ -1,9 +1,28 @@
 // import icons
+import { useEffect, useState } from "react";
 import { BsImage } from "react-icons/bs";
 
 export const ImageDisplay = (props) => {
   const { showImage, setShowImage, invoceIdSelected, invoceImgSelected } =
     props;
+  // states
+  const [imageLink, setImageLink] = useState("");
+  // set final link
+  useEffect(() => {
+    if (invoceImgSelected?.includes("google")) {
+      const ini = invoceImgSelected.indexOf("/d/") + 3;
+      const end = invoceImgSelected.indexOf("/view");
+      const finalString = `https://drive.google.com/uc?export=view&id=${invoceImgSelected.slice(
+        ini,
+        end
+      )}`;
+      console.log(ini, end, finalString);
+      setImageLink(finalString);
+    } else {
+      setImageLink(invoceImgSelected);
+    }
+  }, []);
+
   return (
     <section className="imagePopUpfloatingSection">
       <div
@@ -21,7 +40,11 @@ export const ImageDisplay = (props) => {
         <div className="imageDisplayPhotoSection">
           {invoceImgSelected ? (
             <div className="imageSelectedPreviewContainer">
-              <img className="imageSelectedPreview" src={invoceImgSelected} />
+              <img
+                className="imageSelectedPreview"
+                src={imageLink}
+                alt="loading..."
+              />
             </div>
           ) : (
             <BsImage className="imageDisplayPhotoSectionIcon" />

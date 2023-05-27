@@ -136,6 +136,7 @@ export const InvoicesManager = () => {
           (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
         );
         setInvoices(invoicesImported);
+
         setInvoicesLoading(false);
       };
       getInvoicesFromApi();
