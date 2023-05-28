@@ -67,6 +67,9 @@
   width: 100%;
   border: 1px solid rgb(191, 191, 191);
 }
+/* .invoiceCreatorBoxContainer input[type="number"] {
+  width: 50px;
+} */
 .deleteBtn {
   font-size: 20px;
 }
@@ -78,6 +81,7 @@
   background-color: white;
 }
 .productQuantity {
+  width: 60px;
   border-radius: 4px;
   background-color: rgb(191, 191, 191);
 }
@@ -278,9 +282,6 @@
   /* .invoiceCreatorPorductContainer s */
   .invoiceCreatorPorductContainer .productQuantity {
     width: 40px;
-  }
-  .selectProduct {
-    width: 100%;
   }
   .invoiceCreatorVoucher {
     width: 100%;

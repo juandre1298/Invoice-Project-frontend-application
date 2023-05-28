@@ -118,3 +118,7 @@ export const getSecureUrl = async () => {
     console.log(err);
   }
 };
+
+// post image in secure URL
+
+export const postImageS3 = async () => {};
