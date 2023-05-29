@@ -147,13 +147,10 @@ export const InvoiceDashboard = (props) => {
     setDataForChart(data);
     setLoadingChartData(false);
   };
-  // handle change of date
-  const handleSubmit = () => {
+  // handel changes
+  useEffect(() => {
     createData();
-
-    console.log(initialDate, finalDate, allInvoices[allInvoices.length - 1]);
-  };
-
+  }, [dataDisplay, initialDate, finalDate]);
   return (
     <div className="dashboardSection">
       <h1>Dashboard</h1>
@@ -170,7 +167,6 @@ export const InvoiceDashboard = (props) => {
                 name="date"
                 onChange={(e) => {
                   setInitialDate(e.target.value);
-                  handleSubmit();
                 }}
               />
             </div>
@@ -183,7 +179,6 @@ export const InvoiceDashboard = (props) => {
                 name="date"
                 onChange={(e) => {
                   setFinalDate(e.target.value);
-                  handleSubmit();
                 }}
               />
             </div>
@@ -197,7 +192,6 @@ export const InvoiceDashboard = (props) => {
               className="selectClient"
               onChange={(e) => {
                 setDataDisplay(e.target.value);
-                handleSubmit();
               }}
             >
               <option value="">Select</option>

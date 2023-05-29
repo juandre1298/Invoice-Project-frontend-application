@@ -85,6 +85,7 @@ export const InvoicesManager = () => {
           0,
           100000
         );
+        setAllInvoices(invoicesImported);
         setInvoiceLength(invoicesImported.length);
         setLoadingPages(false);
       };
@@ -164,6 +165,7 @@ export const InvoicesManager = () => {
   return (
     <section className="invoicesManager">
       <InvoiceDashboard allInvoices={allInvoices} />
+
       {globalStatus ? (
         <div className="invoicesBox">
           {globalUser.status === "admin" && (
