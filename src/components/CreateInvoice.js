@@ -176,7 +176,7 @@ export const CreateInvoice = (props) => {
         try {
           await fetch(url, {
             method: "PUT",
-            mode: "cors",
+            /* mode:"cors", */
             headers: {
               "Content-Type": "multipart/form-data",
             },

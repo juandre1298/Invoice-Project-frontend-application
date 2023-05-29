@@ -7,6 +7,7 @@ import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { InvoicesManager } from "./pages/InvoicesManager";
+import { ProductManager } from "./pages/ProductManager";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 
@@ -23,6 +24,7 @@ import "./styles/invoicesManager.css";
 import "./styles/productDisplay.css";
 import "./styles/InvoiceCreatorPopUp.css";
 import "./styles/imagePopUp.css";
+import "./styles/invoiceDashboard.css";
 
 // import for router
 import {
@@ -103,6 +105,10 @@ function App() {
         {
           path: "/InvoicesManager",
           element: <InvoicesManager />,
+        },
+        {
+          path: "/productManager",
+          element: <ProductManager />,
         },
       ],
     },

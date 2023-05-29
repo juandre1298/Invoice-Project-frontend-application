@@ -6,13 +6,17 @@
   text-decoration: none;
   /*   border: red dashed 1px; */
 
-  /*  border: 0.5px dotted red; */
+  /* border: 0.5px dotted red; */
 }
 button {
   border: none;
   background-color: inherit;
 }
-
+html {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
 h1 {
   color: black;
 }

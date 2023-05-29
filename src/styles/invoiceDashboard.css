@@ -1,0 +1,107 @@
+.dashboardSection {
+  /*   margin-bottom: 20px;
+  margin-left: 32px; */
+  background-color: white;
+  height: 80%;
+  border-radius: 32px;
+  padding: 2% 2% 6% 2%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 32px;
+}
+.generalInfoContainer {
+  width: 250px;
+  height: 70%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.dateSelection {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.dateSelection div {
+  box-sizing: border-box;
+}
+.chartControllerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+.chartControllerContainer input {
+  padding: 8px;
+
+  border: 1px solid rgb(191, 191, 191);
+}
+.chartControllerBtns {
+  display: flex;
+  gap: 4px;
+}
+
+@media screen and (max-width: 1024px) {
+  .dashboardSection {
+    padding: 2%;
+    margin-top: 100px;
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .generalInfoContainer {
+    flex-direction: row;
+    justify-content: center;
+    width: 70%;
+  }
+  .dateSelection {
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .chartControllerBtns {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 740px) {
+  .dashboardSection {
+    flex-direction: column;
+    margin-top: 10px;
+
+    border-radius: 10px;
+  }
+  .generalInfoContainer {
+    display: inline-block;
+    box-sizing: content-box;
+    height: 500px;
+    width: 100%;
+    padding: 0 20px 50% 20px;
+  }
+  .chartControllerContainer {
+    flex-direction: column;
+  }
+  .dateSelection {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .dateSelection div {
+    width: 100%;
+  }
+  .chartControllerContainer input {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .dashboardSection {
+    margin: 0 10px 0 10px;
+    padding: 10px;
+  }
+  /*   .generalInfoContainer {
+    flex-direction: column;
+    width: 200px;
+    height: 300px;
+  } */
+}

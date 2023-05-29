@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { TbFileInvoice } from "react-icons/tb";
 import { CgLogOut } from "react-icons/cg";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
+import { FaCubes } from "react-icons/fa";
 
 // context
 import MyContext from "../contexts/userContext";
@@ -42,19 +43,25 @@ export const Navbar = () => {
           </Link>
         </li>
 
-        {globalUser.status === "admin" ? (
-          <li className="invoiceCreatorOnNavbar">
-            <button
-              onClick={() => {
-                setShowInvoiceCreator(!showInvoiceCreator);
-              }}
-              className="addInvoice  "
-            >
-              + &nbsp; Add Invoice
-            </button>
-          </li>
-        ) : (
-          ""
+        {globalUser.status === "admin" && (
+          <>
+            <li className="invoiceCreatorOnNavbar">
+              <button
+                onClick={() => {
+                  setShowInvoiceCreator(!showInvoiceCreator);
+                }}
+                className="addInvoice  "
+              >
+                + &nbsp; Add Invoice
+              </button>
+            </li>
+            <li className="invoiceCreatorOnNavbar">
+              <Link className="iconAndText" to="/productManager">
+                <FaCubes className="invoiceIcon" />
+                <span>Product Manager</span>
+              </Link>
+            </li>
+          </>
         )}
       </ul>
       <div className="logoutBtnArea">

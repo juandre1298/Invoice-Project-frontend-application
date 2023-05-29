@@ -1,21 +1,26 @@
 .invoicesManager {
-  padding-top: 120px;
-  padding-left: 270px;
+  padding-top: 100px;
   background-color: rgb(243, 242, 242);
+  background-color: gray;
   height: 100vh;
-  width: 100%;
+  /* width: 100vw; */
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-evenly;
 }
 .invoicesBox {
   background-color: white;
   height: 80%;
+
   border-radius: 32px;
-  margin: 10px 30px;
+  flex-grow: 1;
+
   padding: 4%;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   gap: 20px;
+  margin: 0 32px 0 0;
 }
 .addInvoice {
   background-color: rgb(56, 58, 58);
@@ -103,7 +108,13 @@ thead th {
 @media screen and (max-width: 1024px) {
   .invoicesManager {
     padding: 0;
-    height: 100hv;
+    height: 100%;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .invoicesBox {
+    margin-left: 4%;
+    margin-right: 4%;
   }
   .loadingInvoicesBox {
     left: 25%;
@@ -112,13 +123,14 @@ thead th {
 /* 768×1024 – 6.11% */
 @media screen and (max-width: 740px) {
   .invoicesManager {
-    margin-top: 100px;
+    margin-top: 90px;
     height: inherit;
+    height: 100%;
   }
   .invoicesBox {
     border-radius: 10px;
-    margin: 0;
-    padding: 0;
+    margin: 0 20px;
+    padding: 10px;
   }
   .invoicesBox table thead tr {
     display: none;
@@ -148,6 +160,12 @@ thead th {
   .paginationLinks {
     flex-wrap: wrap;
     margin: 8px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .invoicesBox {
+    margin: 0 10px 0 10px;
+    padding: 10px;
   }
 }
 .uploadingFiles {

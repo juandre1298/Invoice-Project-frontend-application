@@ -24,6 +24,7 @@ export const Header = () => {
     "/login": "Login",
     "/InvoicesManager": "Invoice",
     "/register": "Sign in",
+    "/productManager": "Product Manager",
   };
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   useEffect(() => {

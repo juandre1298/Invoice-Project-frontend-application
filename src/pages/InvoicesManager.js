@@ -20,6 +20,7 @@ import {
 import { ProductDisplay } from "../components/ProductDisplay";
 import { CreateInvoice } from "../components/CreateInvoice";
 import { ImageDisplay } from "../components/ImageDisplay";
+import { InvoiceDashboard } from "../components/Dashboard";
 
 // import icons
 
@@ -37,6 +38,7 @@ export const InvoicesManager = () => {
   } = useContext(MyContext);
 
   // general states
+  const [allInvoices, setAllInvoices] = useState([]);
   const [invoices, setInvoices] = useState("");
   const [invoicesLoading, setInvoicesLoading] = useState(true);
   const [invoiceLength, setInvoiceLength] = useState(0);
@@ -72,6 +74,7 @@ export const InvoicesManager = () => {
         setLoadingPages(true);
         const invoicesImported = await getInvoices();
         setInvoiceLength(invoicesImported.length);
+        setAllInvoices(invoicesImported);
         setLoadingPages(false);
       };
       getInvoicesFromApi();
@@ -160,9 +163,10 @@ export const InvoicesManager = () => {
 
   return (
     <section className="invoicesManager">
+      <InvoiceDashboard allInvoices={allInvoices} />
       {globalStatus ? (
         <div className="invoicesBox">
-          {globalUser.status === "admin" ? (
+          {globalUser.status === "admin" && (
             <button
               onClick={() => {
                 setShowInvoiceCreator(!showInvoiceCreator);
@@ -171,8 +175,6 @@ export const InvoicesManager = () => {
             >
               + &nbsp; Add Invoice
             </button>
-          ) : (
-            ""
           )}
           <table>
             <thead>
