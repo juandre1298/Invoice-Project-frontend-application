@@ -39,7 +39,7 @@ export const ProductDisplay = (props) => {
               style={
                 invoiceData.product.length > 5
                   ? { "overflow-y": "scroll" }
-                  : { "overflow-y": "hide" }
+                  : { "overflow-y": "none" }
               }
             >
               <table>

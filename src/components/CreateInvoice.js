@@ -169,6 +169,7 @@ export const CreateInvoice = (props) => {
 
         try {
           // uploading to AWS S3
+          setUploadingFiles(true);
           const { result } = await postImage({ image: file });
 
           // create object
@@ -188,6 +189,7 @@ export const CreateInvoice = (props) => {
               return { name: e.name, quantity: e.quantity };
             }),
           };
+          console.log(result);
           postInvoice(invoiceOb);
           alert("Invoice created!");
           setShowInvoiceCreator(false);
@@ -304,10 +306,12 @@ export const CreateInvoice = (props) => {
                     setClient(e.target.value);
                   }}
                 >
-                  <option value="">Select</option>
-                  {clients.map((e) => {
+                  <option key="9999" value="">
+                    Select
+                  </option>
+                  {clients.map((e, i) => {
                     return (
-                      <option value={e.name} key={e.id}>
+                      <option value={e.name} key={i}>
                         {e.name}
                       </option>
                     );
@@ -341,10 +345,12 @@ export const CreateInvoice = (props) => {
                       setProduct(e.target.value);
                     }}
                   >
-                    <option value="">Select</option>
-                    {productsForSale.map((e) => {
+                    <option key="999" value="">
+                      Select
+                    </option>
+                    {productsForSale.map((e, i) => {
                       return (
-                        <option value={e.name} key={e.id}>
+                        <option value={e.name} key={i}>
                           {e.name}
                         </option>
                       );
@@ -378,7 +384,7 @@ export const CreateInvoice = (props) => {
                 </thead>
                 <tbody>
                   {products.map((e) => (
-                    <tr>
+                    <tr key={e.id}>
                       <td data-title="Id">{e.clientProductId}</td>
                       <td data-title="Quantity">{e.quantity}</td>
                       <td data-title="Name">{e.name}</td>
@@ -401,25 +407,26 @@ export const CreateInvoice = (props) => {
           <div className="invoiceCreatorVoucher">
             <h2>Voucher</h2>
 
-            <label for="inputTag" className="invoiceImageButtonLable">
+            <div className="invoiceImageButtonLable">
               <div>
                 {imageFile.length > 0 ? (
                   <>
                     {imageFile.map((e, i) => {
                       return (
                         <div
+                          key={i}
                           onClick={() => {
                             setInvoceImgSelected(e);
                             setShowImage(!showImage);
                           }}
                         >
-                          <img src={e} className="imageIcon" />
+                          <img src={e} key={i} className="imageIcon" />
                         </div>
                       );
                     })}
                   </>
                 ) : (
-                  <form enctype="multipart/from-data">
+                  <form encType="multipart/from-data">
                     <BsImage className="imageIcon" />
                     <input
                       id="inputTag"
@@ -431,7 +438,7 @@ export const CreateInvoice = (props) => {
                   </form>
                 )}
               </div>
-            </label>
+            </div>
             <div className="InvoiceCreatorTotalSection">
               <div>
                 <h2>Subtotal:</h2>
