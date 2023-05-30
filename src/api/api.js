@@ -106,19 +106,14 @@ export const postInvoice = async (invoiceOb) => {
     console.log(error);
   }
 };
-// get secure URL of AWS S3 bucket
 
-export const getSecureUrl = async () => {
-  try {
-    let url = "http://localhost:4000/s3Url";
-    const response = await fetch(url);
-    const data = await response.json();
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
+// upload img to S3
 
-// post image in secure URL
+export async function postImage({ image }) {
+  const formData = new FormData();
+  formData.append("image", image);
 
-export const postImageS3 = async () => {};
+  const result = await axios.post("http://localhost:4000/images", formData);
+
+  return result.data;
+}

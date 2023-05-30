@@ -43,7 +43,7 @@ export const ImageDisplay = (props) => {
               <img
                 className="imageSelectedPreview"
                 src={imageLink}
-                alt="loading..."
+                alt={imageLink}
               />
             </div>
           ) : (

@@ -8,7 +8,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 // import from api
 import { guardarArchivo } from "../api/uploatToDrive";
-import { getSecureUrl } from "../api/api";
+import { postImage } from "../api/api";
 
 /////////////////////////////////////////////////////////////
 export const CreateInvoice = (props) => {
@@ -166,26 +166,31 @@ export const CreateInvoice = (props) => {
     if (dateOfPurchase && client && products && total != 0 && discount <= max) {
       if (imageFileForDrive) {
         const file = imageFileForDrive.target.files[0]; //the file
-        // uploading to AWS S3
 
-        //     get secure url from server
-
-        const { url } = await getSecureUrl();
-        console.log(url);
-        // post the image directly to the s3 bucket
         try {
-          await fetch(url, {
-            method: "PUT",
-            /* mode:"cors", */
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            body: file,
-          });
-          const imageUrl = url?.split("?")[0];
-          console.log(imageUrl);
+          // uploading to AWS S3
+          const { result } = await postImage({ image: file });
 
-          // post request to server to store any extra data
+          // create object
+
+          const userId = clients.filter((e) => {
+            return e.name === client;
+          })[0].id;
+
+          const invoiceOb = {
+            userId,
+            discount,
+            dateOfEntry: dateOfPurchase,
+            subtotal,
+            total,
+            image: result?.Location,
+            products: products.map((e) => {
+              return { name: e.name, quantity: e.quantity };
+            }),
+          };
+          postInvoice(invoiceOb);
+          alert("Invoice created!");
+          setShowInvoiceCreator(false);
           // upload to google cloud
         } catch (error) {
           console.log(
