@@ -55,12 +55,12 @@ export const Navbar = () => {
                 + &nbsp; Add Invoice
               </button>
             </li>
-            <li className="invoiceCreatorOnNavbar">
+            {/*    <li className="invoiceCreatorOnNavbar">
               <Link className="iconAndText" to="/productManager">
                 <FaCubes className="invoiceIcon" />
                 <span>Product Manager</span>
               </Link>
-            </li>
+            </li> */}
           </>
         )}
       </ul>

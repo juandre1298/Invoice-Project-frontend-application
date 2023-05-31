@@ -5,11 +5,15 @@ import { getUsers, postInvoice, getProducts } from "../api/api";
 // import icons
 import { BsImage } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { RiScreenshot2Line } from "react-icons/ri";
 
 // import from api
 import { guardarArchivo } from "../api/uploatToDrive";
 import { postImage } from "../api/api";
 
+// import render
+
+//
 /////////////////////////////////////////////////////////////
 export const CreateInvoice = (props) => {
   const {
@@ -47,7 +51,7 @@ export const CreateInvoice = (props) => {
 
   //  controllers
   const [productsAndClientsLoading] = useState(true);
-  const [maxDiscount, setMaxDiscount] = useState(10);
+  const [maxDiscount, setMaxDiscount] = useState(0);
 
   // get clients and products
   useEffect(() => {
@@ -148,7 +152,12 @@ export const CreateInvoice = (props) => {
         (Date.now() - new Date(clientDateOfEntry)) / milisInYear;
 
       // if 1000> => 10% is not necessary since the starting is 10%
+      if (subtotal > 200) {
+        max = 10;
+      }
+
       // if >3 years => 30%
+
       if (clientTimeYears > 3) {
         max = 30;
       }
@@ -158,7 +167,7 @@ export const CreateInvoice = (props) => {
       }
       if (discount > max) {
         alert(
-          `We are sorry but the discount is greater than the maximum permit of ${maxDiscount}%`
+          `We are sorry but the discount is greater than the maximum permit of ${max}%`
         );
       }
     }
@@ -270,6 +279,18 @@ export const CreateInvoice = (props) => {
       );
     }
   };
+  // take screenshot
+  const takeScreenshot = () => {
+    const allPopUp = document.getElementById("InvoiceCreatorPopUpBox");
+    /*  html2canvas(allPopUp).then((canvas) => {
+      // Convert the canvas to an image
+      const screenshotImg = document.createElement("img");
+      screenshotImg.src = canvas.toDataURL("image/png");
+
+      // Add the image to the DOM or perform any other desired actions
+      document.body.appendChild(screenshotImg);
+    }); */
+  };
 
   return (
     <section className="InvoiceCreatorPopUpSection">
@@ -279,7 +300,7 @@ export const CreateInvoice = (props) => {
           setShowInvoiceCreator(!showInvoiceCreator);
         }}
       ></div>
-      <div className="InvoiceCreatorPopUpBox">
+      <div id="InvoiceCreatorPopUpBox" className="InvoiceCreatorPopUpBox">
         <h1>Add New Invoice</h1>
         <div className="invoiceCreatorForm">
           <div className="invoiceCreatorDetails">
@@ -464,6 +485,15 @@ export const CreateInvoice = (props) => {
           >
             Add
           </button>
+          <button
+            type="submit"
+            value="Add"
+            onClick={takeScreenshot}
+            className="screenshotBtn"
+          >
+            <RiScreenshot2Line />
+          </button>
+
           <button
             className="submitSectionCancelBtn"
             onClick={() => {
