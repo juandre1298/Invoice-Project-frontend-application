@@ -6,6 +6,7 @@ import { TbFileInvoice } from "react-icons/tb";
 import { CgLogOut } from "react-icons/cg";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import { FaCubes } from "react-icons/fa";
+import { BiMenu } from "react-icons/bi";
 
 // context
 import MyContext from "../contexts/userContext";
@@ -30,6 +31,24 @@ export const Navbar = () => {
 
   // handle display and collapse
   const [minNav, setMinNav] = useState(false);
+  // calculate width
+  // burgerMenu
+  const [burgerMenu, setBurgerMenu] = useState(false);
+  useEffect(() => {
+    const updateChartOptions = () => {
+      const screenWidth = window.innerWidth;
+      const burgerLogic = screenWidth < 400;
+      setBurgerMenu(burgerLogic);
+    };
+
+    // Update the chart options when the window is resized
+    window.addEventListener("resize", updateChartOptions);
+
+    return () => {
+      // Cleanup event listener
+      window.removeEventListener("resize", updateChartOptions);
+    };
+  }, []);
   return (
     <nav className={minNav ? "navDisplay" : "navCollapse"}>
       <div className="logoArea">
@@ -84,7 +103,13 @@ export const Navbar = () => {
         }}
         className="minimize"
       >
-        {minNav ? <MdNavigateBefore /> : <MdNavigateNext />}
+        {burgerMenu ? (
+          <BiMenu />
+        ) : minNav ? (
+          <MdNavigateBefore />
+        ) : (
+          <MdNavigateNext />
+        )}
       </button>
     </nav>
   );
