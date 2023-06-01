@@ -1,0 +1,146 @@
+.SimpleInvoiceSection {
+  position: absolute;
+  color: rgb(34, 38, 39);
+  background-color: rgba(0, 0, 0, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+
+  z-index: 2500;
+
+  /* box-sizing: border-box; */
+  font-size: small;
+  overflow: auto;
+}
+.SimpleInvoiceSectionBoxSection {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.realInvoice {
+  /*   height: 791px;
+  width: 612px; */
+  height: 632px;
+  width: 489px;
+  /*   height: 80vh;
+  width: 61.84vh; */
+  background-color: white;
+  z-index: 2500;
+  padding: 4vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+  position: relative;
+}
+.realInvoice h2 {
+  font-size: small;
+}
+.areaTitle img {
+  height: 70%;
+}
+.areaClientInvoice {
+  display: flex;
+  justify-content: space-between;
+}
+.areaTable {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.totalArea {
+  text-align: right;
+}
+.totalAreaContainer {
+  text-align: right;
+  content: attr(data-title) ": ";
+  float: right;
+  display: block;
+  border-bottom: 1px black solid;
+  border-top: 1px black solid;
+}
+.areaFooter {
+  position: absolute;
+  bottom: 6%;
+  left: 0;
+  right: 0;
+  padding: 0 6%;
+  display: flex;
+  justify-content: space-between;
+}
+.companyAdress {
+  text-align: right;
+}
+.areaTable table {
+  width: 100%;
+}
+.areaTable th {
+  text-align: center;
+  padding: 0;
+  background-color: white;
+  border-bottom: 1px solid rgb(170, 170, 170);
+}
+.areaTable td {
+  text-align: center;
+}
+.downloadControllerArea {
+  position: absolute;
+  z-index: 3000;
+  background-color: rgb(170, 170, 170);
+  padding: 10px 20px;
+  border-radius: 8px;
+  /*   left: 40%;
+  top: 20%; */
+  top: 20px;
+  left: 280px;
+  gap: 20x;
+}
+.downloadControllerAreaBtns {
+  display: flex;
+  gap: 8px;
+}
+.downloadImage {
+  background-color: rgb(56, 58, 58);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+}
+
+.downloadImage:hover {
+  cursor: pointer;
+  background-color: rgba(56, 58, 58, 0.8);
+}
+.downloadImage:active {
+  background-color: rgba(56, 58, 58, 1.1);
+}
+.cancelBtn {
+  background-color: white;
+  color: black;
+}
+.cancelBtn:hover {
+  cursor: pointer;
+  background-color: rgba(224, 224, 224, 0.8);
+}
+.cancelBtn:active {
+  background-color: white;
+}
+@media screen and (max-width: 740px) {
+  .SimpleInvoiceSection {
+    display: block;
+  }
+  .realInvoice {
+    height: 632px;
+    width: 489px;
+    overflow-x: scroll;
+  }
+}

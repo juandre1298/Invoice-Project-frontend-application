@@ -11,9 +11,12 @@ import { RiScreenshot2Line } from "react-icons/ri";
 import { guardarArchivo } from "../api/uploatToDrive";
 import { postImage } from "../api/api";
 
-// import render
+// import for screenshot
+import html2canvas from "html2canvas";
 
-//
+//SimpleInvioce
+import { SimpleInvioce } from "./simpleInvoice";
+
 /////////////////////////////////////////////////////////////
 export const CreateInvoice = (props) => {
   const {
@@ -22,6 +25,7 @@ export const CreateInvoice = (props) => {
     setInvoceImgSelected,
     showImage,
     setShowImage,
+    lastInvoice,
   } = props;
 
   // form states
@@ -42,16 +46,15 @@ export const CreateInvoice = (props) => {
   const [imageFileForDrive, setImageFileForDrive] = useState("");
   const [imageObjectResponse, setImageObjectResponse] = useState("");
   const [uploadingFiles, setUploadingFiles] = useState(false);
-  const [urlForS3, setUrlForS3] = useState("");
 
   // invoice calculations
   const [subtotal, setSubtotal] = useState(0);
   const [total, setTotal] = useState(0);
-  const [discountPass, setDiscountPass] = useState(false);
 
   //  controllers
   const [productsAndClientsLoading] = useState(true);
   const [maxDiscount, setMaxDiscount] = useState(0);
+  const [showSimpleInvoice, setShowSimpleInvoice] = useState(false);
 
   // get clients and products
   useEffect(() => {
@@ -281,15 +284,21 @@ export const CreateInvoice = (props) => {
   };
   // take screenshot
   const takeScreenshot = () => {
-    const allPopUp = document.getElementById("InvoiceCreatorPopUpBox");
-    /*  html2canvas(allPopUp).then((canvas) => {
+    /* const allPopUp = document.getElementById("InvoiceCreatorPopUpBox"); */
+    const allPopUp = document.getElementById("invoiceCreatorForm");
+
+    html2canvas(allPopUp, {
+      backgroundColor: "white", // Specify the desired background color
+    }).then((canvas) => {
       // Convert the canvas to an image
-      const screenshotImg = document.createElement("img");
-      screenshotImg.src = canvas.toDataURL("image/png");
+      var screenshotImg = document.createElement("a");
+      screenshotImg.href = canvas.toDataURL("image/png");
+      screenshotImg.download = `${Date.now()}.png`;
+      screenshotImg.click();
 
       // Add the image to the DOM or perform any other desired actions
-      document.body.appendChild(screenshotImg);
-    }); */
+      //document.body.appendChild(screenshotImg);
+    });
   };
 
   return (
@@ -302,7 +311,7 @@ export const CreateInvoice = (props) => {
       ></div>
       <div id="InvoiceCreatorPopUpBox" className="InvoiceCreatorPopUpBox">
         <h1>Add New Invoice</h1>
-        <div className="invoiceCreatorForm">
+        <div className="invoiceCreatorForm" id="invoiceCreatorForm">
           <div className="invoiceCreatorDetails">
             <h2>User Details</h2>
             <div className="invoiceCreatorBoxContainer">
@@ -394,7 +403,7 @@ export const CreateInvoice = (props) => {
             </div>
             {/* table section */}
             <div className="productTableSection">
-              <table>
+              <table className="table">
                 <thead>
                   <tr>
                     <th>Product ID</th>
@@ -488,7 +497,14 @@ export const CreateInvoice = (props) => {
           <button
             type="submit"
             value="Add"
-            onClick={takeScreenshot}
+            /* onClick={takeScreenshot} */
+            onClick={() => {
+              dateOfPurchase && client && products && total != 0
+                ? setShowSimpleInvoice(!showSimpleInvoice)
+                : alert(
+                    "Something is wrong; please be sure that all mandatory items (*) are filled."
+                  );
+            }}
             className="screenshotBtn"
           >
             <RiScreenshot2Line />
@@ -506,6 +522,20 @@ export const CreateInvoice = (props) => {
       </div>
       {uploadingFiles && (
         <div className="uploadingFiles">Uploading Files...</div>
+      )}
+      {showSimpleInvoice && (
+        <SimpleInvioce
+          setShowSimpleInvoice={setShowSimpleInvoice}
+          showSimpleInvoice={showSimpleInvoice}
+          dateOfPurchase={dateOfPurchase}
+          client={clients.filter((e) => e.name == client)}
+          discount={discount}
+          products={products}
+          subtotal={subtotal}
+          total={total}
+          lastInvoice={lastInvoice}
+          productsForSale={productsForSale}
+        />
       )}
     </section>
   );

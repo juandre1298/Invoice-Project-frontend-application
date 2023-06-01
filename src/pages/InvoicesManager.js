@@ -178,7 +178,7 @@ export const InvoicesManager = () => {
               + &nbsp; Add Invoice
             </button>
           )}
-          <table>
+          <table className="table">
             <thead>
               {/* table headers */}
               <tr>
@@ -283,6 +283,7 @@ export const InvoicesManager = () => {
           )}
           {showInvoiceCreator && (
             <CreateInvoice
+              lastInvoice={allInvoices.slice(-1)}
               setInvoceImgSelected={setInvoceImgSelected}
               showImage={showImage}
               setShowImage={setShowImage}

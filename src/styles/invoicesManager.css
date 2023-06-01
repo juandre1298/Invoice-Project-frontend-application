@@ -100,9 +100,6 @@ thead th {
   padding-top: 20px;
   padding-bottom: 20px;
 }
-/* 360×640 – 12.98%  */
-@media screen and (max-width: 400px) {
-}
 
 /* 1280×800 – 7.38% */
 @media screen and (max-width: 1024px) {
@@ -132,28 +129,28 @@ thead th {
     margin: 0 20px;
     padding: 10px;
   }
-  .invoicesBox table thead tr {
+  .invoicesBox .table thead tr {
     display: none;
   }
-  .invoicesBox table tr {
+  .invoicesBox .table tr {
     display: block;
     padding: 20px;
   }
-  table,
+  .table,
   td,
   th {
     border-top: none;
     border-bottom: none;
   }
-  .invoicesBox table td {
+  .invoicesBox .table td {
     text-align: right;
     display: block;
   }
-  .invoicesBox table td::before {
+  .invoicesBox .table td::before {
     content: attr(data-title) ": ";
     float: left;
   }
-  .invoicesBox tbody tr:nth-child(even) {
+  .invoicesBox .table tbody tr:nth-child(even) {
     background-color: rgb(191, 191, 191);
   }
   .paginationArea,

@@ -25,6 +25,7 @@ import "./styles/productDisplay.css";
 import "./styles/InvoiceCreatorPopUp.css";
 import "./styles/imagePopUp.css";
 import "./styles/invoiceDashboard.css";
+import "./styles/simpleInvoice.css";
 
 // import for router
 import {

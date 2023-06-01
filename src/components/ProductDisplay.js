@@ -42,7 +42,7 @@ export const ProductDisplay = (props) => {
                   : { "overflow-y": "none" }
               }
             >
-              <table>
+              <table className="table">
                 <thead>
                   <tr>
                     <th>Product ID</th>
