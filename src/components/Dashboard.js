@@ -2,9 +2,9 @@ import react, { useContext, useState, useRef, useEffect } from "react";
 
 import MyContext from "../contexts/userContext";
 // import Chart
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie, Bar } from "react-chartjs-2";
+
 import { PieChart } from "./PieChart";
+import BarChart from "./BarChart";
 
 // import from api
 import { getUsers } from "../api/api";
@@ -22,20 +22,31 @@ export const InvoiceDashboard = (props) => {
   } = useContext(MyContext);
   // states
   // general states
-  const [client, setClient] = useState(globalUser.name);
+  const [client, setClient] = useState(null);
+
   const [clients, setClients] = useState([]);
+
   const [productsForSale, setProductsForSale] = useState([]);
 
   // chart states
-  const [dataForChart, setDataForChart] = useState([]);
+  const [dataForPieChart, setDataForPieChart] = useState([]);
+  const [dataForFChart, setDataForFChart] = useState({
+    labels: [], // Y-axis labels
+    datasets: [
+      {
+        label: "Quantity",
+        data: [], // X-axis values
+        backgroundColor: "rgba(0, 123, 255, 0.5)", // Bar color
+      },
+    ],
+  });
+
   const [initialDate, setInitialDate] = useState(0);
   const [finalDate, setFinalDate] = useState(Date.now());
   const [loadingChartData, setLoadingChartData] = useState(true);
   const [screenWidth, setScreenWidth] = useState("bottom");
   // chart controller
   const [dataDisplay, setDataDisplay] = useState("TotalMoney");
-
-  ChartJS.register(ArcElement, Tooltip, Legend);
 
   // get clients and products and generate dataFroChart
   useEffect(() => {
@@ -95,7 +106,10 @@ export const InvoiceDashboard = (props) => {
       window.removeEventListener("resize", updateChartOptions);
     };
   }, []);
-  const createData = () => {
+  // create data for charts
+  const createData = async () => {
+    setLoadingChartData(true);
+    // filter data by date
     const purchaseArray = clients.map((clientN) =>
       allInvoices.filter(
         (invoiceN) =>
@@ -105,15 +119,15 @@ export const InvoiceDashboard = (props) => {
       )
     );
 
-    const clientsData = generateData(purchaseArray);
+    const clientsData = await generateData(purchaseArray);
 
-    // generate
-    const data = {
-      labels: clientsData.map((e) => e.name).filter((e) => e),
+    // generate Pie Chart
+    const PieData = {
+      labels: clientsData?.map((e) => e.name),
       datasets: [
         {
           label: "Customer purchase",
-          data: clientsData.map((e) => e[dataDisplay]).filter((e) => e),
+          data: clientsData?.map((e) => e[dataDisplay]),
           backgroundColor: [
             "rgba(0, 51, 204, 0.5)", // Deep blue
             "rgba(51, 102, 255, 0.5)", // Medium blue
@@ -144,10 +158,58 @@ export const InvoiceDashboard = (props) => {
         },
       ],
     };
-    setDataForChart(data);
+    setDataForPieChart(PieData);
+    // set bar chart data
+    if (client) {
+      try {
+        const objectProductos = clientsData?.filter((e) => {
+          return e.name === client;
+        })[0]?.productCount;
+        console.log(objectProductos);
+        // organize objectProductos
+        // console.log(lables, dataBarQuantity, dataBarTotal);
+        objectProductos.sort((a, b) => {
+          return -a.productCuantity + b.productCuantity;
+        });
+        const lables = objectProductos?.map((e) => e.productName);
+        const dataBarQuantity = objectProductos?.map((e) => e.productCuantity);
+        const dataBarTotal = objectProductos?.map(
+          (e) =>
+            e.productCuantity *
+            productsForSale?.filter(
+              (element) => element.name === e.productName
+            )[0].price
+        );
+
+        // frequency chart data
+        const barData = {
+          labels: lables, // Y-axis labels
+          datasets: [
+            {
+              label: "Quantity",
+              data: dataBarQuantity, // X-axis values
+              backgroundColor: "rgba(0, 123, 255, 0.5)", // Bar color
+            },
+            /*   {
+              label: "Total",
+              data: dataBarTotal, // X-axis values
+              backgroundColor: "green", // Bar color
+            }, */
+          ],
+        };
+        //console.log(barData);
+        setDataForFChart(barData);
+      } catch (error) {
+        console.log("no pruchases made", error);
+        setDataForFChart(null);
+      }
+    }
     setLoadingChartData(false);
   };
   // handel changes
+  useEffect(() => {
+    createData();
+  }, [client]);
   useEffect(() => {
     createData();
   }, [dataDisplay, initialDate, finalDate]);
@@ -205,28 +267,55 @@ export const InvoiceDashboard = (props) => {
           <p>loading data...</p>
         ) : (
           <>
-            <Pie
-              className="pie"
-              // Set the desired width of the pie chart
-              data={dataForChart}
-              options={{
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: screenWidth,
-                    display: true, // Change the position of the legend
-                  },
-                },
-              }}
-            />
+            <div>
+              <PieChart
+                dataForPieChart={dataForPieChart}
+                screenWidth={screenWidth}
+              />
+            </div>
+            <div>
+              <div className="chartControllerBtns">
+                <label>Client</label>
+                <br />
+                <select
+                  value={client}
+                  className="selectClient"
+                  onChange={(e) => {
+                    setClient(e.target.value);
+                  }}
+                >
+                  <option key="9999" value="">
+                    Select
+                  </option>
+                  {clients.map((e, i) => {
+                    return (
+                      <option value={e.name} key={i}>
+                        {e.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              {client ? (
+                dataForFChart?.labels?.length > 0 ? (
+                  <BarChart dataForFChart={dataForFChart} />
+                ) : (
+                  <div>No Purchase Done Yet</div>
+                )
+              ) : (
+                <div>Please Select A Client</div>
+              )}
+            </div>
           </>
         )}
       </div>
     </div>
   );
 };
+
 // generate data
 const generateData = (arr) => {
+  //console.log("calling generate Data");
   return arr.map((subClientN) => {
     const TotalMoney = subClientN.reduce((a, b) => {
       return a + b.total;
@@ -234,20 +323,34 @@ const generateData = (arr) => {
     const TotalDiscount = subClientN.reduce((a, b) => {
       return a + (b.subtotal - b.total);
     }, 0);
-
+    // products is an array with the object of each products and quantities purchase on each invoice
     const products = subClientN.map((e) => e.product);
-    let productCount = {};
-    products.forEach((subArray) => {
+
+    /* console.log(`products ${subClientN[0]?.userName}`, products); */
+    let productCount = [];
+    products.forEach((subArray, i) => {
       subArray.forEach((product) => {
-        const productName = product.name;
-        if (productCount.hasOwnProperty(productName)) {
-          productCount[productName] += product.quantity;
+        // check if already exist
+        if (productCount?.map((e) => e.productName).includes(product.name)) {
+          // if it exist we must change it
+          const indexOfRepeated = productCount
+            ?.map((e) => e.productName)
+            .indexOf(product.name);
+          let productCuantity = productCount[indexOfRepeated].productCuantity;
+          productCuantity += product.quantity;
+          const miniObject = { productName: product.name, productCuantity };
+          productCount[indexOfRepeated] = miniObject;
         } else {
-          productCount[productName] = product.quantity;
+          // if it doesn't exist we must push it
+          const miniObject = {
+            productName: product.name,
+            productCuantity: product.quantity,
+          };
+          productCount.push(miniObject);
         }
       });
     });
-
+    //    console.log("productCount", productCount);
     return {
       name: subClientN[0]?.userName,
       userId: subClientN[0]?.userId,
