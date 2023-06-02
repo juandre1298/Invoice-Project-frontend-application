@@ -47,6 +47,7 @@ export const InvoiceDashboard = (props) => {
   const [screenWidth, setScreenWidth] = useState("bottom");
   // chart controller
   const [dataDisplay, setDataDisplay] = useState("TotalMoney");
+  const [pageController, setPageController] = useState(0);
   const [detailsSelectorData, setDetailsSelectorData] =
     useState("productTotal");
 
@@ -201,10 +202,8 @@ export const InvoiceDashboard = (props) => {
   // handel changes
   useEffect(() => {
     createData();
-  }, [client, detailsSelectorData]);
-  useEffect(() => {
-    createData();
-  }, [dataDisplay, initialDate, finalDate]);
+  }, [client, detailsSelectorData, dataDisplay, initialDate, finalDate]);
+
   return (
     <div className="dashboardSection">
       <h1>Dashboard</h1>
@@ -213,7 +212,7 @@ export const InvoiceDashboard = (props) => {
           <h2>Customers Data</h2>
           <div className="dateSelection">
             <div>
-              <label>Initial Date*</label>
+              <label>Initial Date</label>
               <br />
               <input
                 type="date"
@@ -225,7 +224,7 @@ export const InvoiceDashboard = (props) => {
               />
             </div>
             <div>
-              <label>Final Date*</label>
+              <label>Final Date</label>
               <br />
               <input
                 type="date"
@@ -237,41 +236,44 @@ export const InvoiceDashboard = (props) => {
               />
             </div>
           </div>
-          <div className="chartControllerBtns">
-            <label>Chart Data</label>
-
-            <select
-              id="dropdown"
-              value={dataDisplay}
-              className="selectClient"
-              onChange={(e) => {
-                setDataDisplay(e.target.value);
-              }}
-            >
-              <option value="">Select</option>
-              <option value="TotalMoney">Total purchases</option>
-              <option value="TotalDiscount">Total Discount</option>
-              <option value="totalPurchases">Total Invoices</option>
-            </select>
-          </div>
         </div>
+
         {loadingChartData ? (
           <p>loading data...</p>
         ) : (
-          <>
-            <div>
-              <PieChart
-                dataForPieChart={dataForPieChart}
-                screenWidth={screenWidth}
-              />
+          <div
+            className="chartsContainer"
+            style={{ transform: `translateX(-${pageController * 100}%)` }}
+          >
+            <div className="pieChartSection">
+              <div className="pieChartSectionController">
+                <label>Data</label>
+                <select
+                  value={dataDisplay}
+                  onChange={(e) => {
+                    setDataDisplay(e.target.value);
+                  }}
+                >
+                  <option value="">Select</option>
+                  <option value="TotalMoney">Total purchases</option>
+                  <option value="TotalDiscount">Total Discount</option>
+                  <option value="totalPurchases">Total Invoices</option>
+                </select>
+              </div>
+              <div className="pieChart">
+                <PieChart
+                  dataForPieChart={dataForPieChart}
+                  screenWidth={screenWidth}
+                />
+              </div>
             </div>
-            <div>
-              <div className="chartControllerBtns">
+
+            <div className="barChartSection">
+              <div>
                 <label>Client</label>
                 <br />
                 <select
                   value={client}
-                  className="selectClient"
                   onChange={(e) => {
                     setClient(e.target.value);
                   }}
@@ -288,7 +290,7 @@ export const InvoiceDashboard = (props) => {
                   })}
                 </select>
               </div>
-              <div className="chartControllerBtns">
+              <div>
                 <label>Type of Data</label>
                 <br />
                 <select
@@ -304,7 +306,9 @@ export const InvoiceDashboard = (props) => {
               </div>
               {client ? (
                 dataForFChart?.labels?.length > 0 ? (
-                  <BarChart dataForFChart={dataForFChart} />
+                  <>
+                    <BarChart dataForFChart={dataForFChart} />
+                  </>
                 ) : (
                   <div>No Purchase Done Yet</div>
                 )
@@ -312,8 +316,28 @@ export const InvoiceDashboard = (props) => {
                 <div>Please Select A Client</div>
               )}
             </div>
-          </>
+          </div>
         )}
+      </div>
+      <div className="pageController">
+        <button
+          onClick={() => {
+            pageController > 0
+              ? setPageController(pageController - 1)
+              : setPageController(2);
+          }}
+        >
+          {"<"}
+        </button>
+        <button
+          onClick={() => {
+            pageController < 2
+              ? setPageController(pageController + 1)
+              : setPageController(0);
+          }}
+        >
+          {">"}
+        </button>
       </div>
     </div>
   );
@@ -321,59 +345,60 @@ export const InvoiceDashboard = (props) => {
 
 // generate data
 const generateData = (arr, productPrices) => {
-  //console.log("calling generate Data");
-  return arr.map((subClientN) => {
-    const TotalMoney = subClientN.reduce((a, b) => {
-      return a + b.total;
-    }, 0);
-    const TotalDiscount = subClientN.reduce((a, b) => {
-      return a + (b.subtotal - b.total);
-    }, 0);
-    // products is an array with the object of each products and quantities purchase on each invoice
-    const products = subClientN.map((e) => e.product);
+  return arr
+    .filter((e) => e.length > 0)
+    .map((subClientN) => {
+      const TotalMoney = subClientN.reduce((a, b) => {
+        return a + b.total;
+      }, 0);
+      const TotalDiscount = subClientN.reduce((a, b) => {
+        return a + (b.subtotal - b.total);
+      }, 0);
+      // products is an array with the object of each products and quantities purchase on each invoice
+      const products = subClientN.map((e) => e.product);
 
-    /* console.log(`products ${subClientN[0]?.userName}`, products); */
-    let productCount = [];
-    products.forEach((subArray, i) => {
-      subArray.forEach((product) => {
-        // check if already exist
-        if (productCount?.map((e) => e.productName).includes(product.name)) {
-          // if it exist we must change it
-          const indexOfRepeated = productCount
-            ?.map((e) => e.productName)
-            .indexOf(product.name);
-          let productCuantity = productCount[indexOfRepeated].productCuantity;
-          productCuantity += product.quantity;
-          const miniObject = {
-            productName: product.name,
-            productCuantity,
-          };
-          productCount[indexOfRepeated] = miniObject;
-        } else {
-          // if it doesn't exist we must push it
-          const miniObject = {
-            productName: product.name,
-            productCuantity: product.quantity,
-          };
-          productCount.push(miniObject);
-        }
+      /* console.log(`products ${subClientN[0]?.userName}`, products); */
+      let productCount = [];
+      products.forEach((subArray, i) => {
+        subArray.forEach((product) => {
+          // check if already exist
+          if (productCount?.map((e) => e.productName).includes(product.name)) {
+            // if it exist we must change it
+            const indexOfRepeated = productCount
+              ?.map((e) => e.productName)
+              .indexOf(product.name);
+            let productCuantity = productCount[indexOfRepeated].productCuantity;
+            productCuantity += product.quantity;
+            const miniObject = {
+              productName: product.name,
+              productCuantity,
+            };
+            productCount[indexOfRepeated] = miniObject;
+          } else {
+            // if it doesn't exist we must push it
+            const miniObject = {
+              productName: product.name,
+              productCuantity: product.quantity,
+            };
+            productCount.push(miniObject);
+          }
+        });
       });
-    });
-    // create totals
-    productCount = productCount.map((e) => {
+      // create totals
+      productCount = productCount.map((e) => {
+        return {
+          ...e,
+          productTotal: e.productCuantity * productPrices[e.productName],
+        };
+      });
+
       return {
-        ...e,
-        productTotal: e.productCuantity * productPrices[e.productName],
+        name: subClientN[0]?.userName,
+        userId: subClientN[0]?.userId,
+        TotalMoney,
+        totalPurchases: subClientN.length,
+        TotalDiscount,
+        productCount,
       };
     });
-
-    return {
-      name: subClientN[0]?.userName,
-      userId: subClientN[0]?.userId,
-      TotalMoney,
-      totalPurchases: subClientN.length,
-      TotalDiscount,
-      productCount,
-    };
-  });
 };

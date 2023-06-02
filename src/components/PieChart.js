@@ -7,7 +7,6 @@ export const PieChart = (props) => {
 
   return (
     <Pie
-      className="pie"
       // Set the desired width of the pie chart
       data={dataForPieChart}
       options={{

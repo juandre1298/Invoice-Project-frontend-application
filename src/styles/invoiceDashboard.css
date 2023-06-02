@@ -1,10 +1,9 @@
 .dashboardSection {
-  /*   margin-bottom: 20px;
-  margin-left: 32px; */
   background-color: white;
-  height: 80%;
+  height: 95%;
+  box-sizing: border-box;
   border-radius: 32px;
-  padding: 2% 2% 6% 2%;
+  padding: 2% 2% 2% 2%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -12,39 +11,102 @@
   margin: 0 32px;
 }
 .generalInfoContainer {
-  width: 250px;
-  height: 70%;
+  height: 100%;
   padding: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 10px;
+  position: relative;
+  overflow: auto;
+  overflow-x: hidden;
 }
-.dateSelection {
+.pageController {
   display: flex;
-  gap: 4px;
   justify-content: center;
+  gap: 20px;
 }
-.dateSelection div {
-  box-sizing: border-box;
+.pageController button {
+  background-color: rgba(172, 172, 172, 0.4);
+
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.pageController button:hover {
+  background-color: rgba(172, 172, 172, 0.6);
+  cursor: pointer;
 }
 .chartControllerContainer {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 1;
   text-align: center;
 }
+.chartControllerContainer div {
+  width: 100%;
+}
 .chartControllerContainer input {
-  padding: 8px;
-
+  padding: 4px 8px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid rgb(191, 191, 191);
+  border-radius: 4px;
 }
-.chartControllerBtns {
+.dateSelection {
   display: flex;
-  gap: 4px;
+  gap: 8px;
+  justify-content: space-between;
 }
 
-@media screen and (max-width: 1024px) {
+.chartsContainer {
+  width: 100%;
+  height: 75%;
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  /* gap: 20px; */
+  top: 100px;
+
+  /*   transform: translateX(-100%); */
+  transition: transform 1s;
+}
+.pieChartSection {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.pieChartSectionController {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0 4px 6px;
+}
+.pieChartSectionController select {
+  width: 100%;
+  padding: 4px 6px;
+}
+.pieChart {
+  height: 100%;
+  width: 268px;
+}
+.barChartSection {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: rgb(44, 236, 44);
+  padding: 4px;
+  box-sizing: border-box;
+  text-align: center;
+}
+/* @media screen and (max-width: 1024px) {
   .dashboardSection {
     padding: 2%;
     margin-top: 100px;
@@ -99,9 +161,9 @@
     margin: 0 10px 0 10px;
     padding: 10px;
   }
-  /*   .generalInfoContainer {
+   .generalInfoContainer {
     flex-direction: column;
     width: 200px;
     height: 300px;
-  } */
-}
+  } 
+} */
