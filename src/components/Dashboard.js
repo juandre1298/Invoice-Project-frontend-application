@@ -5,10 +5,12 @@ import MyContext from "../contexts/userContext";
 
 import { PieChart } from "./PieChart";
 import BarChart from "./BarChart";
+import LineChart from "./LineChart";
 
 // import from api
 import { getUsers } from "../api/api";
 import { getProducts } from "../api/api";
+import { CostExplorer } from "aws-sdk";
 
 export const InvoiceDashboard = (props) => {
   const { allInvoices } = props;
@@ -22,7 +24,7 @@ export const InvoiceDashboard = (props) => {
   } = useContext(MyContext);
   // states
   // general states
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState("all");
 
   const [clients, setClients] = useState([]);
 
@@ -45,7 +47,7 @@ export const InvoiceDashboard = (props) => {
   const [finalDate, setFinalDate] = useState(Date.now());
   const [loadingChartData, setLoadingChartData] = useState(true);
   const [screenWidth, setScreenWidth] = useState("bottom");
-  // chart controller
+  // chart controllers
   const [dataDisplay, setDataDisplay] = useState("TotalMoney");
   const [pageController, setPageController] = useState(0);
   const [detailsSelectorData, setDetailsSelectorData] =
@@ -110,6 +112,7 @@ export const InvoiceDashboard = (props) => {
     };
   }, []);
   // create data for charts
+  const [dataSummary, setDataSummary] = useState([]);
   const createData = () => {
     setLoadingChartData(true);
     // filter data by date
@@ -125,14 +128,16 @@ export const InvoiceDashboard = (props) => {
     productsForSale.forEach((e) => (productPrices[e.name] = e.price));
 
     const clientsData = generateData(purchaseArray, productPrices);
-
+    setDataSummary(clientsData);
     // generate Pie Chart
     const PieData = {
-      labels: clientsData?.map((e) => e.name),
+      labels: clientsData?.filter((e) => e.name !== "all").map((e) => e.name),
       datasets: [
         {
           label: "Customer purchase",
-          data: clientsData?.map((e) => e[dataDisplay]),
+          data: clientsData
+            ?.filter((e) => e.name !== "all")
+            .map((e) => e[dataDisplay]),
           backgroundColor: [
             "rgba(0, 51, 204, 0.5)", // Deep blue
             "rgba(51, 102, 255, 0.5)", // Medium blue
@@ -164,13 +169,14 @@ export const InvoiceDashboard = (props) => {
       ],
     };
     setDataForPieChart(PieData);
+
     // set bar chart data
     if (client) {
       try {
         const objectProductos = clientsData?.filter((e) => {
           return e.name === client;
         })[0]?.productCount;
-        console.log(objectProductos);
+        //console.log(objectProductos);
         // organize objectProductos
         // console.log(lables, dataBarQuantity, dataBarTotal);
         objectProductos.sort((a, b) => {
@@ -199,7 +205,7 @@ export const InvoiceDashboard = (props) => {
     }
     setLoadingChartData(false);
   };
-  // handel changes
+  // handle changes
   useEffect(() => {
     createData();
   }, [client, detailsSelectorData, dataDisplay, initialDate, finalDate]);
@@ -267,9 +273,8 @@ export const InvoiceDashboard = (props) => {
                 />
               </div>
             </div>
-
-            <div className="barChartSection">
-              <div>
+            <div className="SumaryChartSection">
+              <div className="SumaryChartSectionController">
                 <label>Client</label>
                 <br />
                 <select
@@ -278,9 +283,56 @@ export const InvoiceDashboard = (props) => {
                     setClient(e.target.value);
                   }}
                 >
-                  <option key="9999" value="">
-                    Select
-                  </option>
+                  <option value="">Select</option>
+                  <option value="all">All</option>
+                  {clients.map((e, i) => {
+                    return (
+                      <option value={e.name} key={i}>
+                        {e.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div className="displaySummaryInfo">
+                <div>Client:{client}</div>
+
+                <div>
+                  Total Sale: $
+                  {dataSummary?.filter((e) => e.name === client)[0]?.TotalMoney}
+                </div>
+                <div>
+                  Total Discount: $
+                  {
+                    dataSummary?.filter((e) => e.name === client)[0]
+                      ?.TotalDiscount
+                  }
+                </div>
+                <div>
+                  Total Vouchers:
+                  {
+                    dataSummary?.filter((e) => e.name === client)[0]
+                      ?.totalPurchases
+                  }
+                </div>
+              </div>
+              <div>
+                {" "}
+                <LineChart />
+              </div>
+            </div>
+            <div className="barChartSection">
+              <div className="barChartSectioncontroller">
+                <label>Client</label>
+                <br />
+                <select
+                  value={client}
+                  onChange={(e) => {
+                    setClient(e.target.value);
+                  }}
+                >
+                  <option value="">Select</option>
+                  <option value="all">All</option>
                   {clients.map((e, i) => {
                     return (
                       <option value={e.name} key={i}>
@@ -295,13 +347,12 @@ export const InvoiceDashboard = (props) => {
                 <br />
                 <select
                   value={detailsSelectorData}
-                  className="selectClient"
                   onChange={(e) => {
                     setDetailsSelectorData(e.target.value);
                   }}
                 >
                   <option value="productTotal">Total</option>
-                  <option value="productCuantity">Quantity</option>
+                  <option value="productQuantity">Quantity</option>
                 </select>
               </div>
               {client ? (
@@ -345,7 +396,7 @@ export const InvoiceDashboard = (props) => {
 
 // generate data
 const generateData = (arr, productPrices) => {
-  return arr
+  const response = arr
     .filter((e) => e.length > 0)
     .map((subClientN) => {
       const TotalMoney = subClientN.reduce((a, b) => {
@@ -356,8 +407,6 @@ const generateData = (arr, productPrices) => {
       }, 0);
       // products is an array with the object of each products and quantities purchase on each invoice
       const products = subClientN.map((e) => e.product);
-
-      /* console.log(`products ${subClientN[0]?.userName}`, products); */
       let productCount = [];
       products.forEach((subArray, i) => {
         subArray.forEach((product) => {
@@ -367,28 +416,29 @@ const generateData = (arr, productPrices) => {
             const indexOfRepeated = productCount
               ?.map((e) => e.productName)
               .indexOf(product.name);
-            let productCuantity = productCount[indexOfRepeated].productCuantity;
-            productCuantity += product.quantity;
+            let productQuantity = productCount[indexOfRepeated].productQuantity;
+            productQuantity += product.quantity;
             const miniObject = {
               productName: product.name,
-              productCuantity,
+              productQuantity,
             };
             productCount[indexOfRepeated] = miniObject;
           } else {
             // if it doesn't exist we must push it
             const miniObject = {
               productName: product.name,
-              productCuantity: product.quantity,
+              productQuantity: product.quantity,
             };
             productCount.push(miniObject);
           }
         });
       });
       // create totals
+
       productCount = productCount.map((e) => {
         return {
           ...e,
-          productTotal: e.productCuantity * productPrices[e.productName],
+          productTotal: e.productQuantity * productPrices[e.productName],
         };
       });
 
@@ -401,4 +451,56 @@ const generateData = (arr, productPrices) => {
         productCount,
       };
     });
+  //console.log("response", response);
+  // calculate all
+  let productsCount = [];
+  response.forEach((data) => {
+    // check if already exist
+    data?.productCount.forEach((e) => {
+      if (
+        productsCount
+          .map((subProductCount) => subProductCount.productName)
+          .includes(e.productName)
+      ) {
+        // get index
+        const indexOfRepeated = productsCount
+          ?.map((e) => e.productName)
+          .indexOf(e.productName);
+        // replace data
+        productsCount[indexOfRepeated] = {
+          productName: e.productName,
+          productTotal:
+            e.productTotal + productsCount[indexOfRepeated].productTotal,
+          productQuantity:
+            e.productQuantity + productsCount[indexOfRepeated].productQuantity,
+        };
+      } else {
+        productsCount.push({
+          productName: e.productName,
+          productTotal: e.productTotal,
+          productQuantity: e.productQuantity,
+        });
+      }
+    });
+  });
+  // integrate to main response array
+  const totalMoneySum = response.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.TotalMoney;
+  }, 0);
+  const TotalDiscountSum = response.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.TotalDiscount;
+  }, 0);
+  const totalPurchasesSum = response.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.totalPurchases;
+  }, 0);
+  response.push({
+    name: "all",
+    userId: null,
+    TotalMoney: totalMoneySum,
+    TotalDiscount: TotalDiscountSum,
+    totalPurchases: totalPurchasesSum,
+    productCount: productsCount,
+  });
+
+  return response;
 };
