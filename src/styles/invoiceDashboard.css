@@ -94,6 +94,7 @@
 .pieChartSectionController select {
   width: 100%;
   padding: 4px 6px;
+  box-sizing: border-box;
 }
 .pieChart {
   height: 100%;
@@ -101,7 +102,6 @@
 }
 /* summary Style */
 .SumaryChartSection {
-  background-color: lightcoral;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -110,7 +110,6 @@
   text-align: center;
 }
 .SumaryChartSection div {
-  width: 268px;
 }
 .SumaryChartSectionController {
   display: flex;
@@ -119,10 +118,16 @@
   gap: 4px;
   padding: 4px 0 4px 6px;
 }
+
 .SumaryChartSection select {
-  width: 100%;
   padding: 4px 6px;
+  box-sizing: border-box;
 }
+.lineChart {
+  height: 100%;
+  width: 268px;
+}
+
 /* bar style */
 .barChartSection {
   height: 100%;
@@ -140,10 +145,16 @@
   gap: 4px;
   padding: 4px 0 4px 6px;
 }
+.pieChartSectionController select {
+  width: 100%;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
 .barChart {
   height: 100%;
   width: 268px;
 }
+
 /* @media screen and (max-width: 1024px) {
   .dashboardSection {
     padding: 2%;

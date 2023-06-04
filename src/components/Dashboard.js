@@ -34,13 +34,11 @@ export const InvoiceDashboard = (props) => {
   const [dataForPieChart, setDataForPieChart] = useState([]);
   const [dataForFChart, setDataForFChart] = useState({
     labels: [], // Y-axis labels
-    datasets: [
-      {
-        label: "Quantity",
-        data: [], // X-axis values
-        backgroundColor: "rgba(0, 123, 255, 0.5)", // Bar color
-      },
-    ],
+    datasets: [],
+  });
+  const [dataForLineChart, setDataForLineChart] = useState({
+    labels: [],
+    datasets: [],
   });
 
   const [initialDate, setInitialDate] = useState(0);
@@ -116,13 +114,13 @@ export const InvoiceDashboard = (props) => {
   const createData = () => {
     setLoadingChartData(true);
     // filter data by date
+    const invoiceInRange = allInvoices.filter(
+      (invoiceN) =>
+        new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
+        new Date(invoiceN.dateOfEntry) <= new Date(finalDate)
+    );
     const purchaseArray = clients.map((clientN) =>
-      allInvoices.filter(
-        (invoiceN) =>
-          invoiceN.userId === clientN.id &&
-          new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
-          new Date(invoiceN.dateOfEntry) <= new Date(finalDate)
-      )
+      invoiceInRange.filter((invoiceN) => invoiceN.userId === clientN.id)
     );
     let productPrices = {};
     productsForSale.forEach((e) => (productPrices[e.name] = e.price));
@@ -170,24 +168,69 @@ export const InvoiceDashboard = (props) => {
     };
     setDataForPieChart(PieData);
 
-    // set bar chart data
     if (client) {
       try {
+        // generate Line chart data
+        const [labelsLineChart, totals, discounts, numberOfProducts, sales] =
+          generateDataLine(invoiceInRange, client);
+
+        const dataLineChart = {
+          labels: labelsLineChart,
+          datasets: [
+            {
+              label: "Totals",
+              yAxisID: "y",
+              data: totals,
+              fill: true,
+              backgroundColor: "#0fc9e7",
+              borderColor: "rgba(75,192,192,1)",
+            },
+            {
+              label: "Discounts",
+              yAxisID: "y",
+              data: discounts,
+              fill: false,
+              borderColor: "#c24d2c",
+            },
+            {
+              label: "Number Of Products",
+              yAxisID: "y1",
+              data: numberOfProducts,
+              fill: false,
+              borderColor: "#e8630a",
+            },
+            {
+              label: "Number Of Products",
+              data: numberOfProducts,
+              yAxisID: "y1",
+              fill: false,
+              borderColor: "#fd5959",
+            },
+            {
+              label: "Sales",
+              yAxisID: "y1",
+              data: sales,
+              fill: false,
+              borderColor: "#fd5959",
+            },
+          ],
+        };
+        console.log("dataLineChart", dataLineChart);
+        setDataForLineChart(dataLineChart);
+        // frequency chart data
+
         const objectProductos = clientsData?.filter((e) => {
           return e.name === client;
         })[0]?.productCount;
-        //console.log(objectProductos);
-        // organize objectProductos
-        // console.log(lables, dataBarQuantity, dataBarTotal);
+
         objectProductos.sort((a, b) => {
           return -a[detailsSelectorData] + b[detailsSelectorData];
         });
-        const lables = objectProductos?.map((e) => e.productName);
+        const labels = objectProductos?.map((e) => e.productName);
         const dataBar = objectProductos?.map((e) => e[detailsSelectorData]);
 
-        // frequency chart data
         const barData = {
-          labels: lables, // Y-axis labels
+          labels: labels, // Y-axis labels
           datasets: [
             {
               label: detailsSelectorData,
@@ -196,7 +239,7 @@ export const InvoiceDashboard = (props) => {
             },
           ],
         };
-        //console.log(barData);
+
         setDataForFChart(barData);
       } catch (error) {
         console.log("no pruchases made", error);
@@ -316,9 +359,8 @@ export const InvoiceDashboard = (props) => {
                   }
                 </div>
               </div>
-              <div>
-                {" "}
-                <LineChart />
+              <div className="lineChart">
+                <LineChart dataForLineChart={dataForLineChart} />
               </div>
             </div>
             <div className="barChartSection">
@@ -503,4 +545,51 @@ const generateData = (arr, productPrices) => {
   });
 
   return response;
+};
+const generateDataLine = (arr, client) => {
+  let newArr = [...arr];
+  if (client != "all") {
+    newArr = arr.filter((e) => {
+      return e.userName === client;
+    });
+  }
+
+  const labels = [];
+  const totals = [];
+  const numberOfProducts = [];
+  const discounts = [];
+  const sales = [];
+  newArr.forEach((e) => {
+    let monthN = new Date(e.dateOfEntry).toLocaleString("default", {
+      month: "short",
+    });
+
+    if (!labels.includes(monthN)) {
+      // generate labels
+      labels.push(monthN);
+      // generate Totals
+      totals.push(e.total);
+      // generate discounts
+      discounts.push(-e.total + e.subtotal);
+      // generate Number of products sells
+      numberOfProducts.push(e.product.length);
+      // generate N of Sales
+      sales.push(1);
+    } else {
+      // get index
+      const indexInlabels = labels.indexOf(monthN);
+      // add to totals
+      totals[indexInlabels] = totals[indexInlabels] + e.total;
+      // add discounts
+      discounts[indexInlabels] =
+        discounts[indexInlabels] - e.total + e.subtotal;
+      // add Number of products sells
+      numberOfProducts[indexInlabels] =
+        numberOfProducts[indexInlabels] + e.product.length;
+      // generate N of Sales
+      sales[indexInlabels]++;
+    }
+  });
+
+  return [labels, totals, discounts, numberOfProducts, sales];
 };
