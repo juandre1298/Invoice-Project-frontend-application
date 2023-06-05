@@ -7,6 +7,7 @@ export const ImageDisplay = (props) => {
     props;
   // states
   const [imageLink, setImageLink] = useState("");
+  const [zoom, setZoom] = useState(false);
   // set final link
   useEffect(() => {
     if (invoceImgSelected?.includes("google")) {
@@ -39,11 +40,22 @@ export const ImageDisplay = (props) => {
         )}
         <div className="imageDisplayPhotoSection">
           {invoceImgSelected ? (
-            <div className="imageSelectedPreviewContainer">
+            <div
+              onClick={() => {
+                setZoom(!zoom);
+              }}
+              className={
+                zoom
+                  ? "imageSelectedPreviewContainerZoomed"
+                  : "imageSelectedPreviewContainer"
+              }
+            >
               <img
-                className="imageSelectedPreview"
                 src={imageLink}
-                alt={imageLink}
+                alt={`charging ${imageLink}`}
+                className={
+                  zoom ? "imageSelectedPreviewZoomed" : "imageSelectedPreview"
+                }
               />
             </div>
           ) : (

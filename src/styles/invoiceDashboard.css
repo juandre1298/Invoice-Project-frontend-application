@@ -78,6 +78,7 @@
 @media screen and (min-width: 600px) {
   .dashboardSection {
     margin: 10px 4% 0 4%;
+    padding: 4%;
 
     border-radius: 32px;
   }
@@ -87,7 +88,7 @@
   }
   .pieChart,
   .lineChart {
-    width: 45vw;
+    width: 40vw;
     height: 40vw;
   }
   .pieChartContainer {
