@@ -44,13 +44,35 @@ export const InvoiceDashboard = (props) => {
   const [initialDate, setInitialDate] = useState(0);
   const [finalDate, setFinalDate] = useState(Date.now());
   const [loadingChartData, setLoadingChartData] = useState(true);
-  const [screenWidth, setScreenWidth] = useState("bottom");
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   // chart controllers
   const [dataDisplay, setDataDisplay] = useState("TotalMoney");
   const [pageController, setPageController] = useState(0);
   const [detailsSelectorData, setDetailsSelectorData] =
     useState("productTotal");
+  // calculate width
+  const chartInstance = useRef(null);
+  useEffect(() => {
+    const updateChartOptions = () => {
+      const screenWidthT = window.innerWidth;
+      if (screenWidth < 1024) {
+        setPageController(0);
+      }
+      setScreenWidth(screenWidthT);
+      if (chartInstance.current) {
+        chartInstance.current.options.plugins.legend.position = screenWidthT;
+        chartInstance.current.update();
+      }
+    };
 
+    // Update the chart options when the window is resized
+    window.addEventListener("resize", updateChartOptions);
+
+    return () => {
+      // Cleanup event listener
+      window.removeEventListener("resize", updateChartOptions);
+    };
+  }, []);
   // get clients and products and generate dataFroChart
   useEffect(() => {
     const getUsersFromApi = async () => {
@@ -85,30 +107,7 @@ export const InvoiceDashboard = (props) => {
       });
     });
   }, [allInvoices]);
-  // calculate width
-  const chartContainer = useRef(null);
-  const chartInstance = useRef(null);
-  useEffect(() => {
-    const updateChartOptions = () => {
-      const screenWidth = window.innerWidth;
-      const legendPosition =
-        screenWidth < 1024 ? (screenWidth < 740 ? "top" : "right") : "bottom";
 
-      setScreenWidth(legendPosition);
-      if (chartInstance.current) {
-        chartInstance.current.options.plugins.legend.position = legendPosition;
-        chartInstance.current.update();
-      }
-    };
-
-    // Update the chart options when the window is resized
-    window.addEventListener("resize", updateChartOptions);
-
-    return () => {
-      // Cleanup event listener
-      window.removeEventListener("resize", updateChartOptions);
-    };
-  }, []);
   // create data for charts
   const [dataSummary, setDataSummary] = useState([]);
   const createData = () => {
@@ -173,7 +172,6 @@ export const InvoiceDashboard = (props) => {
         // generate Line chart data
         const [labelsLineChart, totals, discounts, numberOfProducts, sales] =
           generateDataLine(invoiceInRange, client);
-
         const dataLineChart = {
           labels: labelsLineChart,
           datasets: [
@@ -190,28 +188,23 @@ export const InvoiceDashboard = (props) => {
               yAxisID: "y",
               data: discounts,
               fill: false,
-              borderColor: "#c24d2c",
+              borderColor: "rgba(51,102,255,1)",
             },
             {
               label: "Number Of Products",
               yAxisID: "y1",
               data: numberOfProducts,
               fill: false,
-              borderColor: "#e8630a",
-            },
-            {
-              label: "Number Of Products",
-              data: numberOfProducts,
-              yAxisID: "y1",
-              fill: false,
-              borderColor: "#fd5959",
+              borderColor: "rgba(75,75,75,1)", // Dark gray color
+              borderDash: [5, 5], // Set the border dash pattern for "Number Of Products"
             },
             {
               label: "Sales",
               yAxisID: "y1",
               data: sales,
               fill: false,
-              borderColor: "#fd5959",
+              borderColor: "black",
+              borderDash: [5, 5], // Set the border dash pattern for "Sales"
             },
           ],
         };
@@ -246,6 +239,7 @@ export const InvoiceDashboard = (props) => {
         setDataForFChart(null);
       }
     }
+    // calculate with
     setLoadingChartData(false);
   };
   // handle changes
@@ -286,7 +280,6 @@ export const InvoiceDashboard = (props) => {
             </div>
           </div>
         </div>
-
         {loadingChartData ? (
           <p>loading data...</p>
         ) : (
@@ -294,79 +287,90 @@ export const InvoiceDashboard = (props) => {
             className="chartsContainer"
             style={{ transform: `translateX(-${pageController * 100}%)` }}
           >
-            <div className="pieChartSection">
-              <div className="pieChartSectionController">
-                <label>Data</label>
-                <select
-                  value={dataDisplay}
-                  onChange={(e) => {
-                    setDataDisplay(e.target.value);
-                  }}
-                >
-                  <option value="">Select</option>
-                  <option value="TotalMoney">Total purchases</option>
-                  <option value="TotalDiscount">Total Discount</option>
-                  <option value="totalPurchases">Total Invoices</option>
-                </select>
-              </div>
-              <div className="pieChart">
-                <PieChart
-                  dataForPieChart={dataForPieChart}
-                  screenWidth={screenWidth}
-                />
-              </div>
-            </div>
-            <div className="SumaryChartSection">
-              <div className="SumaryChartSectionController">
-                <label>Client</label>
-                <br />
-                <select
-                  value={client}
-                  onChange={(e) => {
-                    setClient(e.target.value);
-                  }}
-                >
-                  <option value="">Select</option>
-                  <option value="all">All</option>
-                  {clients.map((e, i) => {
-                    return (
-                      <option value={e.name} key={i}>
-                        {e.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className="displaySummaryInfo">
-                <div>Client:{client}</div>
+            <div className="subChartContainer1">
+              <div className="pieChartSection">
+                <div className="pieChartSectionController">
+                  <label>Data</label>
+                  <select
+                    value={dataDisplay}
+                    onChange={(e) => {
+                      setDataDisplay(e.target.value);
+                    }}
+                  >
+                    <option value="">Select</option>
+                    <option value="TotalMoney">Total purchases</option>
+                    <option value="TotalDiscount">Total Discount</option>
+                    <option value="totalPurchases">Total Invoices</option>
+                  </select>
+                </div>
 
-                <div>
-                  Total Sale: $
-                  {dataSummary?.filter((e) => e.name === client)[0]?.TotalMoney}
-                </div>
-                <div>
-                  Total Discount: $
-                  {
-                    dataSummary?.filter((e) => e.name === client)[0]
-                      ?.TotalDiscount
-                  }
-                </div>
-                <div>
-                  Total Vouchers:
-                  {
-                    dataSummary?.filter((e) => e.name === client)[0]
-                      ?.totalPurchases
-                  }
+                <div className="pieChart">
+                  <PieChart
+                    dataForPieChart={dataForPieChart}
+                    screenWidth={
+                      screenWidth < 1024
+                        ? screenWidth < 740
+                          ? "top"
+                          : "right"
+                        : "bottom"
+                    }
+                  />
                 </div>
               </div>
-              <div className="lineChart">
-                <LineChart dataForLineChart={dataForLineChart} />
+              <div className="SumaryChartSection">
+                <div className="SumaryChartSectionController">
+                  <label>Client</label>
+                  <br />
+                  <select
+                    value={client}
+                    onChange={(e) => {
+                      setClient(e.target.value);
+                    }}
+                  >
+                    <option value="">Select</option>
+                    <option value="all">All</option>
+                    {clients.map((e, i) => {
+                      return (
+                        <option value={e.name} key={i}>
+                          {e.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div className="displaySummaryInfo">
+                  <div>Client:{client}</div>
+
+                  <div>
+                    Total Sale: $
+                    {
+                      dataSummary?.filter((e) => e.name === client)[0]
+                        ?.TotalMoney
+                    }
+                  </div>
+                  <div>
+                    Total Discount: $
+                    {
+                      dataSummary?.filter((e) => e.name === client)[0]
+                        ?.TotalDiscount
+                    }
+                  </div>
+                  <div>
+                    Total Vouchers:
+                    {
+                      dataSummary?.filter((e) => e.name === client)[0]
+                        ?.totalPurchases
+                    }
+                  </div>
+                </div>
+                <div className="lineChart">
+                  <LineChart dataForLineChart={dataForLineChart} />
+                </div>
               </div>
             </div>
             <div className="barChartSection">
-              <div className="barChartSectioncontroller">
+              <div className="barChartSectionControllerClient">
                 <label>Client</label>
-                <br />
                 <select
                   value={client}
                   onChange={(e) => {
@@ -384,9 +388,9 @@ export const InvoiceDashboard = (props) => {
                   })}
                 </select>
               </div>
-              <div>
-                <label>Type of Data</label>
-                <br />
+              <div className="barChartSectionControllerData">
+                <label>Data</label>
+
                 <select
                   value={detailsSelectorData}
                   onChange={(e) => {
@@ -397,17 +401,20 @@ export const InvoiceDashboard = (props) => {
                   <option value="productQuantity">Quantity</option>
                 </select>
               </div>
-              {client ? (
-                dataForFChart?.labels?.length > 0 ? (
-                  <>
-                    <BarChart dataForFChart={dataForFChart} />
-                  </>
+              <div className="barChart">
+                {client ? (
+                  dataForFChart?.labels?.length > 0 ? (
+                    <BarChart
+                      dataForFChart={dataForFChart}
+                      screenWidth={screenWidth}
+                    />
+                  ) : (
+                    <div>No Purchase Done Yet</div>
+                  )
                 ) : (
-                  <div>No Purchase Done Yet</div>
-                )
-              ) : (
-                <div>Please Select A Client</div>
-              )}
+                  <div>Please Select A Client</div>
+                )}
+              </div>
             </div>
           </div>
         )}

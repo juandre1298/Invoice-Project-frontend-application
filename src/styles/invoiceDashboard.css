@@ -1,26 +1,173 @@
 .dashboardSection {
   background-color: white;
-  height: 95%;
+  display: block;
+  text-align: center;
+  margin: 10px 10px 0 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.pageController {
+  display: none;
+}
+.chartControllerContainer h2 {
+  font-size: large;
+}
+.dateSelection div {
+  display: flex;
+  padding: 2px;
+  justify-content: center;
+  align-items: center;
+}
+.dateSelection label {
+  width: 100%;
+}
+.dateSelection input {
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid gray;
+}
+.pieChartSectionController,
+.SumaryChartSectionController,
+.barChartSectionControllerClient,
+.barChartSectionControllerData {
+  display: flex;
+  padding: 2px;
+  justify-content: center;
+  align-items: center;
+}
+.pieChartSectionController label,
+.SumaryChartSectionController label,
+.barChartSectionControllerClient label,
+.barChartSectionControllerData label {
+  width: 100%;
+}
+.pieChartSectionController select,
+.SumaryChartSectionController select,
+.barChartSectionControllerClient select,
+.barChartSectionControllerData select {
+  background-color: white;
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.pieChart,
+.lineChart,
+.barChart {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 10px;
+  width: 70vw;
+  height: 50vh;
+  box-sizing: border-box;
+}
+.barChart {
+  height: 360px;
+}
+@media screen and (min-width: 400px) {
+  .dashboardSection {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media screen and (min-width: 600px) {
+  .dashboardSection {
+    margin: 10px 4% 0 4%;
+
+    border-radius: 32px;
+  }
+  .subChartContainer1 {
+    display: flex;
+    justify-content: space-around;
+  }
+  .pieChart,
+  .lineChart {
+    width: 45vw;
+    height: 40vw;
+  }
+  .pieChartContainer {
+    height: 90%;
+    display: flex;
+    align-items: center;
+  }
+  .barChart {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .dashboardSection {
+    border-radius: 32px;
+    margin: 0 32px;
+    height: 80%;
+    padding: 4% 2%;
+  }
+  .generalInfoContainer {
+    width: 270px;
+    height: 65vh;
+    overflow: hidden;
+  }
+  .chartsContainer {
+    display: flex;
+  }
+  .subChartContainer1 {
+    justify-content: center;
+  }
+
+  .pieChart,
+  .lineChart,
+  .barChart {
+    width: 268px;
+  }
+  .pieChart {
+    height: 40vh;
+  }
+  .lineChart {
+    height: 55%;
+  }
+
+  .chartsContainer {
+    transition: transform 1s;
+  }
+  .pageController {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .pageController button {
+    background-color: rgba(172, 172, 172, 0.4);
+
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .pageController button:hover {
+    background-color: rgba(172, 172, 172, 0.6);
+    cursor: pointer;
+  }
+}
+
+/* 
+.dashboardSection {
+  background-color: white;
   box-sizing: border-box;
   border-radius: 32px;
   padding: 2% 2% 2% 2%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
   margin: 0 32px;
 }
 .generalInfoContainer {
-  height: 100%;
+  height: 65vh;
   padding: 0;
   margin: 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
+  margin-left: auto;
+  margin-right: auto;
   position: relative;
-  overflow: auto;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 .pageController {
   display: flex;
@@ -55,7 +202,7 @@
   border: 1px solid rgb(191, 191, 191);
   border-radius: 4px;
 }
-/* Chart section */
+
 .dateSelection {
   display: flex;
   gap: 8px;
@@ -63,21 +210,25 @@
 }
 
 .chartsContainer {
+
+  transition: transform 1s;
   width: 100%;
-  height: 75%;
+  min-height: 75%;
+
   box-sizing: border-box;
   position: absolute;
   display: flex;
-  /* gap: 20px; */
+
   top: 100px;
 
-  /*   transform: translateX(-100%); */
-  transition: transform 1s;
 }
-/* pie style */
+.subChartContainer1 {
+  display: flex;
+  height: 100%;
+}
+
 .pieChartSection {
   height: 100%;
-  background-color: aqua;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -97,20 +248,24 @@
   box-sizing: border-box;
 }
 .pieChart {
-  height: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  height: 290px;
   width: 268px;
+  box-sizing: border-box;
 }
-/* summary Style */
+
+
 .SumaryChartSection {
-  height: 100%;
-  display: flex;
+  height: 60%;
+
   flex-direction: column;
   gap: 4px;
   box-sizing: border-box;
   text-align: center;
 }
-.SumaryChartSection div {
-}
+
 .SumaryChartSectionController {
   display: flex;
   justify-content: center;
@@ -122,57 +277,86 @@
 .SumaryChartSection select {
   padding: 4px 6px;
   box-sizing: border-box;
+  width: 100%;
 }
 .lineChart {
   height: 100%;
+
   width: 268px;
 }
-
-/* bar style */
 .barChartSection {
   height: 100%;
-  background-color: lightgreen;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
   gap: 4px;
-  box-sizing: border-box;
-  text-align: center;
+  height: 400px;
 }
-.pieChartSectionController {
+.barChartSectionControllerData,
+.barChartSectionControllerClient {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 4px;
   padding: 4px 0 4px 6px;
 }
-.pieChartSectionController select {
+.barChartSectionControllerData select,
+.barChartSectionControllerClient select {
   width: 100%;
   padding: 4px 6px;
-  box-sizing: border-box;
 }
 .barChart {
-  height: 100%;
   width: 268px;
+  height: 100%;
+  transition: rotate 2s;
+  overflow: auto;
 }
 
-/* @media screen and (max-width: 1024px) {
+@media screen and (max-width: 1024px) {
   .dashboardSection {
-    padding: 2%;
     margin-top: 100px;
-    margin-left: 4%;
-    margin-right: 4%;
+    box-sizing: content-box;
+    height: auto;
+    display: block;
+  }
+  .pageController {
+    display: none;
   }
   .generalInfoContainer {
-    flex-direction: row;
+    overflow: show;
+    height: auto;
+    width: 90%;
+    display: block;
+
+  }
+  .chartsContainer {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    width: 70%;
+    align-items: flex-start;
+    height: auto;
   }
-  .dateSelection {
-    flex-direction: column;
-    justify-content: space-evenly;
+  .subChartContainer1 {
+    height: 50%;
+    justify-content: space-around;
   }
-  .chartControllerBtns {
+
+  .barChartSectionControllerClient {
+    display: none;
+  }
+  .barChartSection {
+    display: block;
+    overflow: auto;
+  }
+  .barChart {
+    width: 100%;
+    height: 65%;
+  }
+}
+@media screen and (max-width: 740px) {
+  .dashboardSection {
     flex-direction: column;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-sizing: content-box;
   }
 }
 @media screen and (max-width: 740px) {

@@ -1,7 +1,7 @@
 .invoicesManager {
   padding-top: 100px;
   background-color: rgb(243, 242, 242);
-  /* background-color: gray; */
+  background-color: gray;
   height: 100vh;
   /* width: 100vw; */
   box-sizing: border-box;
@@ -11,10 +11,8 @@
 .invoicesBox {
   background-color: white;
   height: 80%;
-
   border-radius: 32px;
   flex-grow: 1;
-
   padding: 4%;
   display: flex;
   justify-content: space-between;
@@ -104,7 +102,6 @@ thead th {
 /* 1280×800 – 7.38% */
 @media screen and (max-width: 1024px) {
   .invoicesManager {
-    padding: 0;
     height: 100%;
     flex-direction: column;
     gap: 20px;
@@ -120,7 +117,6 @@ thead th {
 /* 768×1024 – 6.11% */
 @media screen and (max-width: 740px) {
   .invoicesManager {
-    margin-top: 90px;
     height: inherit;
     height: 100%;
   }

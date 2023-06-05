@@ -14,7 +14,24 @@ export const PieChart = (props) => {
         plugins: {
           legend: {
             position: screenWidth,
-            display: true, // Change the position of the legend
+            display: true,
+            labels: {
+              usePointStyle: true, // Enable label overlap detection
+              font: {
+                size: 10, // Adjust the font size as needed
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                // Adjust the label display as per your requirements
+                return context.label + ": " + context.raw;
+              },
+            },
+            bodyFont: {
+              size: 10, // Adjust the font size for tooltip labels
+            },
           },
         },
       }}

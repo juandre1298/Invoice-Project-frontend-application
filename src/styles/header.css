@@ -9,6 +9,7 @@
   justify-content: space-between;
   padding: 20px;
   border-bottom: 2px solid #d3cbc9;
+  z-index: 1;
 }
 header img {
   width: 230px;

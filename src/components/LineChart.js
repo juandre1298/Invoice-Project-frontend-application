@@ -37,7 +37,6 @@ const LineChart = (props) => {
             tension: 0, // Set the tension to 0 for straight lines
           },
         },
-
         scales: {
           y: {
             beginAtZero: true,
@@ -46,6 +45,9 @@ const LineChart = (props) => {
           y1: {
             beginAtZero: true,
             position: "right",
+            grid: {
+              borderDash: [5, 5], // Set the border dash pattern for y1 grid lines
+            },
           },
         },
       }}

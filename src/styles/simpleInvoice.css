@@ -8,7 +8,7 @@
   right: 0;
   position: fixed;
 
-  z-index: 2500;
+  z-index: 25000;
 
   /* box-sizing: border-box; */
   font-size: small;
@@ -23,10 +23,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2500;
+  z-index: 25000;
   background-color: rgba(0, 0, 0, 0.2);
 }
 .realInvoice {
+  margin-top: 90px;
   /*   height: 791px;
   width: 612px; */
   height: 632px;
@@ -34,7 +35,7 @@
   /*   height: 80vh;
   width: 61.84vh; */
   background-color: white;
-  z-index: 2500;
+  z-index: 25000;
   padding: 4vh;
   box-sizing: border-box;
   display: flex;
@@ -94,13 +95,13 @@
 }
 .downloadControllerArea {
   position: absolute;
-  z-index: 3000;
+  z-index: 30000;
   background-color: rgb(170, 170, 170);
   padding: 10px 20px;
   border-radius: 8px;
   /*   left: 40%;
   top: 20%; */
-  top: 20px;
+  top: 120px;
   left: 280px;
   gap: 20x;
 }

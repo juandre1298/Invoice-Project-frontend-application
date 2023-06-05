@@ -33,7 +33,7 @@ export const Navbar = () => {
   const [minNav, setMinNav] = useState(false);
   // calculate width
   // burgerMenu
-  const [burgerMenu, setBurgerMenu] = useState(false);
+  const [burgerMenu, setBurgerMenu] = useState(window.innerWidth < 400);
   useEffect(() => {
     const updateChartOptions = () => {
       const screenWidth = window.innerWidth;
