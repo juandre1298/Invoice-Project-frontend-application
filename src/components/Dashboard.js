@@ -64,7 +64,7 @@ export const InvoiceDashboard = (props) => {
         chartInstance.current.update();
       }
     };
-
+    console.log("here", globalUser.status);
     // Update the chart options when the window is resized
     window.addEventListener("resize", updateChartOptions);
 
@@ -318,28 +318,30 @@ export const InvoiceDashboard = (props) => {
                 </div>
               </div>
               <div className="SumaryChartSection">
-                <div className="SumaryChartSectionController">
-                  <label>Client</label>
-                  <br />
-                  <select
-                    value={client}
-                    onChange={(e) => {
-                      setClient(e.target.value);
-                    }}
-                  >
-                    <option value="">Select</option>
-                    <option value="all">All</option>
-                    {clients.map((e, i) => {
-                      return (
-                        <option value={e.name} key={i}>
-                          {e.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
+                {globalUser.status === "admin" && (
+                  <div className="SumaryChartSectionController">
+                    <label>Client</label>
+                    <br />
+                    <select
+                      value={client}
+                      onChange={(e) => {
+                        setClient(e.target.value);
+                      }}
+                    >
+                      <option value="">Select</option>
+                      <option value="all">All</option>
+                      {clients.map((e, i) => {
+                        return (
+                          <option value={e.name} key={i}>
+                            {e.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
                 <div className="displaySummaryInfo">
-                  <div>Client:{client}</div>
+                  {globalUser.status === "admin" && <div>Client:{client}</div>}
 
                   <div>
                     Total Sale: $
@@ -369,25 +371,27 @@ export const InvoiceDashboard = (props) => {
               </div>
             </div>
             <div className="barChartSection">
-              <div className="barChartSectionControllerClient">
-                <label>Client</label>
-                <select
-                  value={client}
-                  onChange={(e) => {
-                    setClient(e.target.value);
-                  }}
-                >
-                  <option value="">Select</option>
-                  <option value="all">All</option>
-                  {clients.map((e, i) => {
-                    return (
-                      <option value={e.name} key={i}>
-                        {e.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+              {globalUser.status === "admin" && (
+                <div className="barChartSectionControllerClient">
+                  <label>Client</label>
+                  <select
+                    value={client}
+                    onChange={(e) => {
+                      setClient(e.target.value);
+                    }}
+                  >
+                    <option value="">Select</option>
+                    <option value="all">All</option>
+                    {clients.map((e, i) => {
+                      return (
+                        <option value={e.name} key={i}>
+                          {e.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              )}
               <div className="barChartSectionControllerData">
                 <label>Data</label>
 

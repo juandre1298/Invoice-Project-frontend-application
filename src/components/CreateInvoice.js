@@ -443,15 +443,24 @@ export const CreateInvoice = (props) => {
                   <>
                     {imageFile.map((e, i) => {
                       return (
-                        <div
-                          key={i}
-                          onClick={() => {
-                            setInvoceImgSelected(e);
-                            setShowImage(!showImage);
-                          }}
-                        >
-                          <img src={e} key={i} className="imageIcon" />
-                        </div>
+                        <>
+                          <div
+                            key={i}
+                            onClick={() => {
+                              setInvoceImgSelected(e);
+                              setShowImage(!showImage);
+                            }}
+                          >
+                            <img src={e} key={i} className="imageIcon" />
+                          </div>
+                          <button
+                            onClick={() => {
+                              setImageFile([]);
+                            }}
+                          >
+                            <RiDeleteBin6Line />
+                          </button>
+                        </>
                       );
                     })}
                   </>

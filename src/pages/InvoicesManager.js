@@ -95,7 +95,11 @@ export const InvoicesManager = () => {
 
   // handle page change
   useEffect(() => {
-    const lastPage = parseInt(invoiceLength / invoicesPerPage) + 1;
+    const lastPage =
+      parseInt(invoiceLength / invoicesPerPage) ==
+      invoiceLength / invoicesPerPage
+        ? parseInt(invoiceLength / invoicesPerPage)
+        : parseInt(invoiceLength / invoicesPerPage) + 1;
 
     // change pagesButtonArray
     if (currentaPage > 5 && lastPage >= 9) {
