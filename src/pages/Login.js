@@ -76,7 +76,7 @@ export const Login = () => {
           <div>
             <form className="loginForm" onSubmit={handleSubmit}>
               <div>
-                <label for="fname">User:</label>
+                <label for="fname">email:</label>
                 <br />
                 <input
                   type="text"
