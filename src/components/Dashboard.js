@@ -64,7 +64,7 @@ export const InvoiceDashboard = (props) => {
         chartInstance.current.update();
       }
     };
-    console.log("here", globalUser.status);
+    /* console.log("here", globalUser.status); */
     // Update the chart options when the window is resized
     window.addEventListener("resize", updateChartOptions);
 
@@ -208,7 +208,7 @@ export const InvoiceDashboard = (props) => {
             },
           ],
         };
-        console.log("dataLineChart", dataLineChart);
+        /* console.log("dataLineChart", dataLineChart); */
         setDataForLineChart(dataLineChart);
         // frequency chart data
 
