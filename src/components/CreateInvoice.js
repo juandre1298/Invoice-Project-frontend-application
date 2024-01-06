@@ -201,7 +201,7 @@ export const CreateInvoice = (props) => {
               return { name: e.name, quantity: e.quantity };
             }),
           };
-          console.log(result);
+          /* console.log(result); */
           postInvoice(invoiceOb);
           alert("Invoice created!");
           setShowInvoiceCreator(false);
@@ -252,7 +252,7 @@ export const CreateInvoice = (props) => {
               console.log(error);
             }
           };
-          console.log(reader);
+          /* console.log(reader); */
         }
       } else {
         // create object
@@ -443,7 +443,7 @@ export const CreateInvoice = (props) => {
                   <>
                     {imageFile.map((e, i) => {
                       return (
-                        <>
+                        <div key={i}>
                           <div
                             key={i}
                             onClick={() => {
@@ -460,7 +460,7 @@ export const CreateInvoice = (props) => {
                           >
                             <RiDeleteBin6Line />
                           </button>
-                        </>
+                        </div>
                       );
                     })}
                   </>
