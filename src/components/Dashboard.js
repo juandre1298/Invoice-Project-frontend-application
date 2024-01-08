@@ -73,34 +73,34 @@ export const InvoiceDashboard = (props) => {
       window.removeEventListener("resize", updateChartOptions);
     };
   }, []);
-  // get clients and products and generate dataFroChart
+  // get clients and products and generate dataForChart
+  const getUsersFromApi = async () => {
+    try {
+      const users = await getUsers();
+      // sort users
+      users.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+
+      setClients(users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // get products
+  const getProductsFromApi = async () => {
+    try {
+      const productsFromApi = await getProducts();
+      // sort products
+      productsFromApi.sort((a, b) =>
+        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+      );
+      setProductsForSale(productsFromApi);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const getUsersFromApi = async () => {
-      try {
-        const users = await getUsers();
-        // sort users
-        users.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
-
-        setClients(users);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    // get products
-    const getProductsFromApi = async () => {
-      try {
-        const productsFromApi = await getProducts();
-        // sort products
-        productsFromApi.sort((a, b) =>
-          a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-        );
-        setProductsForSale(productsFromApi);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     getUsersFromApi().then(() => {
       getProductsFromApi().then(() => {
         createData();
@@ -113,6 +113,7 @@ export const InvoiceDashboard = (props) => {
   const createData = () => {
     setLoadingChartData(true);
     // filter data by date
+    console.log(allInvoices);
     const invoiceInRange = allInvoices.filter(
       (invoiceN) =>
         new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
@@ -461,31 +462,38 @@ const generateData = (arr, productPrices) => {
       // products is an array with the object of each products and quantities purchase on each invoice
       const products = subClientN.map((e) => e.product);
       let productCount = [];
-      products.forEach((subArray, i) => {
-        subArray.forEach((product) => {
-          // check if already exist
-          if (productCount?.map((e) => e.productName).includes(product.name)) {
-            // if it exist we must change it
-            const indexOfRepeated = productCount
-              ?.map((e) => e.productName)
-              .indexOf(product.name);
-            let productQuantity = productCount[indexOfRepeated].productQuantity;
-            productQuantity += product.quantity;
-            const miniObject = {
-              productName: product.name,
-              productQuantity,
-            };
-            productCount[indexOfRepeated] = miniObject;
-          } else {
-            // if it doesn't exist we must push it
-            const miniObject = {
-              productName: product.name,
-              productQuantity: product.quantity,
-            };
-            productCount.push(miniObject);
+      if (products) {
+        products.forEach((subArray) => {
+          if (subArray) {
+            subArray.forEach((product) => {
+              // check if already exist
+              if (
+                productCount?.map((e) => e.productName).includes(product.name)
+              ) {
+                // if it exist we must change it
+                const indexOfRepeated = productCount
+                  ?.map((e) => e.productName)
+                  .indexOf(product.name);
+                let productQuantity =
+                  productCount[indexOfRepeated].productQuantity;
+                productQuantity += product.quantity;
+                const miniObject = {
+                  productName: product.name,
+                  productQuantity,
+                };
+                productCount[indexOfRepeated] = miniObject;
+              } else {
+                // if it doesn't exist we must push it
+                const miniObject = {
+                  productName: product.name,
+                  productQuantity: product.quantity,
+                };
+                productCount.push(miniObject);
+              }
+            });
           }
         });
-      });
+      }
       // create totals
 
       productCount = productCount.map((e) => {

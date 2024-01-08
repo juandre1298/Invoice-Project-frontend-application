@@ -64,7 +64,7 @@ export const InvoicesManager = () => {
   const [showProducts, setShowProducts] = useState(false);
   const [showImage, setShowImage] = useState(false);
 
-  const [invoceIdSelected, setInvoceIdSelected] = useState(0);
+  const [invoiceSelected, setInvoceSelected] = useState({});
   const [invoceImgSelected, setInvoceImgSelected] = useState({});
 
   // get the total of pages
@@ -72,7 +72,8 @@ export const InvoicesManager = () => {
     if (globalUser.status === "admin") {
       const getInvoicesFromApi = async () => {
         setLoadingPages(true);
-        const invoicesImported = await getInvoices();
+        // const invoicesImported = await getInvoices();
+        const invoicesImported = await getInvoicesByRange(0, invoicesPerPage);
         setInvoiceLength(invoicesImported.length);
         setAllInvoices(invoicesImported);
         setLoadingPages(false);
@@ -91,6 +92,7 @@ export const InvoicesManager = () => {
       };
       getInvoicesFromApi();
     }
+    // console.log("all invoices", allInvoices);
   }, []);
 
   // handle page change
@@ -163,8 +165,7 @@ export const InvoicesManager = () => {
       getInvoicesFromApi();
     }
   }, [currentaPage, loadingPages]);
-  // handleProductDisplay
-  useEffect(() => {}, [showProducts]);
+  console.log("all invoices", allInvoices);
 
   return (
     <section className="invoicesManager">
@@ -215,7 +216,7 @@ export const InvoicesManager = () => {
                         <button
                           className="tableIcons"
                           onClick={() => {
-                            setInvoceIdSelected(invoice.id);
+                            setInvoceSelected(invoice?.products);
                             setInvoceImgSelected(invoice.image);
                             setShowImage(!showImage);
                           }}
@@ -227,7 +228,10 @@ export const InvoicesManager = () => {
                         <button
                           className="tableIcons"
                           onClick={() => {
-                            setInvoceIdSelected(invoice.id);
+                            setInvoceSelected({
+                              id: invoice.id,
+                              products: invoice?.products,
+                            });
                             setShowProducts(!showProducts);
                           }}
                         >
@@ -272,7 +276,7 @@ export const InvoicesManager = () => {
           </div>
           {showProducts && (
             <ProductDisplay
-              invoceIdSelected={invoceIdSelected}
+              invoiceSelected={invoiceSelected}
               showProducts={showProducts}
               setShowProducts={setShowProducts}
             />
@@ -281,7 +285,7 @@ export const InvoicesManager = () => {
             <ImageDisplay
               showImage={showImage}
               setShowImage={setShowImage}
-              invoceIdSelected={invoceIdSelected}
+              invoceIdSelected={invoiceSelected}
               invoceImgSelected={invoceImgSelected}
             />
           )}
