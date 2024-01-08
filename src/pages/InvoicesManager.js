@@ -75,7 +75,7 @@ export const InvoicesManager = () => {
 
   return (
     <section className="invoicesManager">
-      <InvoiceDashboard allInvoices={allInvoices} />
+      {/* <InvoiceDashboard allInvoices={allInvoices} /> */}
 
       {globalStatus ? (
         <div className="invoicesBox">

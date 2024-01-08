@@ -56,33 +56,34 @@ export const CreateInvoice = (props) => {
   const [maxDiscount, setMaxDiscount] = useState(0);
   const [showSimpleInvoice, setShowSimpleInvoice] = useState(false);
 
+  const getUsersFromApi = async () => {
+    try {
+      const users = await getUsers();
+      // sort users
+      users.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+
+      setClients(users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getProductsFromApi = async () => {
+    try {
+      const productsFromApi = await getProducts();
+      // sort products
+      productsFromApi.sort((a, b) =>
+        a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+      );
+      setProductsForSale(productsFromApi);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // get clients and products
   useEffect(() => {
-    const getUsersFromApi = async () => {
-      try {
-        const users = await getUsers();
-        // sort users
-        users.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
-
-        setClients(users);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUsersFromApi();
     // get products
-    const getProductsFromApi = async () => {
-      try {
-        const productsFromApi = await getProducts();
-        // sort products
-        productsFromApi.sort((a, b) =>
-          a.name > b.name ? 1 : b.name > a.name ? -1 : 0
-        );
-        setProductsForSale(productsFromApi);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getProductsFromApi();
   }, []);
 
@@ -129,6 +130,7 @@ export const CreateInvoice = (props) => {
     setSubtotal(temporalSubTotal);
     setTotal(temporalSubTotal * (1 - discount / 100));
   }, [products, discount]);
+
   //handle image selection
   const handleImageSelector = (event) => {
     setImageFileForDrive(event);
@@ -282,31 +284,13 @@ export const CreateInvoice = (props) => {
       );
     }
   };
-  // take screenshot
-  const takeScreenshot = () => {
-    /* const allPopUp = document.getElementById("InvoiceCreatorPopUpBox"); */
-    const allPopUp = document.getElementById("invoiceCreatorForm");
-
-    html2canvas(allPopUp, {
-      backgroundColor: "white", // Specify the desired background color
-    }).then((canvas) => {
-      // Convert the canvas to an image
-      var screenshotImg = document.createElement("a");
-      screenshotImg.href = canvas.toDataURL("image/png");
-      screenshotImg.download = `${Date.now()}.png`;
-      screenshotImg.click();
-
-      // Add the image to the DOM or perform any other desired actions
-      //document.body.appendChild(screenshotImg);
-    });
-  };
 
   return (
     <section className="InvoiceCreatorPopUpSection">
       <div
         className="InvoiceCreatorOutOfBoxSection"
         onClick={() => {
-          setShowInvoiceCreator(!showInvoiceCreator);
+          setShowInvoiceCreator(false);
         }}
       ></div>
       <div id="InvoiceCreatorPopUpBox" className="InvoiceCreatorPopUpBox">
@@ -506,7 +490,6 @@ export const CreateInvoice = (props) => {
           <button
             type="submit"
             value="Add"
-            /* onClick={takeScreenshot} */
             onClick={() => {
               dateOfPurchase && client && products && total != 0
                 ? setShowSimpleInvoice(!showSimpleInvoice)
