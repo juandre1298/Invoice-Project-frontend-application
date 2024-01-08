@@ -3,7 +3,7 @@ import { getInvoiceById } from "../api/api";
 
 export const ProductDisplay = (props) => {
   // get props
-  const { invoiceSelected, showProducts, setShowProducts } = props;
+  const { invoiceSelected, setShowProducts } = props;
 
   console.log("props productDisplay:", props, invoiceSelected);
   return (
@@ -12,7 +12,7 @@ export const ProductDisplay = (props) => {
         <div
           className="productDisplayOutOfBoxSection"
           onClick={() => {
-            setShowProducts(!showProducts);
+            setShowProducts(false);
           }}
         ></div>
         <div className="productDisplayPopUpBox">

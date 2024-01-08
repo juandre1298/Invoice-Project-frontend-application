@@ -5,6 +5,7 @@ import { BsImage } from "react-icons/bs";
 export const ImageDisplay = (props) => {
   const { showImage, setShowImage, invoceIdSelected, invoceImgSelected } =
     props;
+  console.log("imageDisplay Props:", props);
   // states
   const [imageLink, setImageLink] = useState("");
   const [zoom, setZoom] = useState(false);

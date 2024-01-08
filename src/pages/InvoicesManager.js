@@ -277,7 +277,6 @@ export const InvoicesManager = () => {
           {showProducts && (
             <ProductDisplay
               invoiceSelected={invoiceSelected}
-              showProducts={showProducts}
               setShowProducts={setShowProducts}
             />
           )}
