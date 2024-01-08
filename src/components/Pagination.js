@@ -77,7 +77,7 @@ export const Pagination = (props) => {
   };
 
   useEffect(() => {
-    handlePageChane(1);
+    handlePageChane(currentaPage);
   }, [totalInvoicesCount]);
 
   return (
