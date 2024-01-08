@@ -64,7 +64,6 @@ export const InvoiceDashboard = (props) => {
         chartInstance.current.update();
       }
     };
-    /* console.log("here", globalUser.status); */
     // Update the chart options when the window is resized
     window.addEventListener("resize", updateChartOptions);
 
@@ -113,7 +112,6 @@ export const InvoiceDashboard = (props) => {
   const createData = () => {
     setLoadingChartData(true);
     // filter data by date
-    console.log(allInvoices);
     const invoiceInRange = allInvoices.filter(
       (invoiceN) =>
         new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
@@ -209,7 +207,6 @@ export const InvoiceDashboard = (props) => {
             },
           ],
         };
-        /* console.log("dataLineChart", dataLineChart); */
         setDataForLineChart(dataLineChart);
         // frequency chart data
 
@@ -236,7 +233,7 @@ export const InvoiceDashboard = (props) => {
 
         setDataForFChart(barData);
       } catch (error) {
-        console.log("no pruchases made", error);
+        console.error("no pruchases made", error);
         setDataForFChart(null);
       }
     }
@@ -512,7 +509,6 @@ const generateData = (arr, productPrices) => {
         productCount,
       };
     });
-  //console.log("response", response);
   // calculate all
   let productsCount = [];
   response.forEach((data) => {

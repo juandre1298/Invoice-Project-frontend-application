@@ -21,6 +21,7 @@ import { ProductDisplay } from "../components/ProductDisplay";
 import { CreateInvoice } from "../components/CreateInvoice";
 import { ImageDisplay } from "../components/ImageDisplay";
 import { InvoiceDashboard } from "../components/Dashboard";
+import { Pagination } from "../components/Pagination";
 
 // import icons
 
@@ -40,22 +41,11 @@ export const InvoicesManager = () => {
   // general states
   const [allInvoices, setAllInvoices] = useState([]);
   const [invoices, setInvoices] = useState("");
+  const [totalInvoicesCount, setTotalInvoicesCount] = useState(0);
   const [invoicesLoading, setInvoicesLoading] = useState(true);
-  const [invoiceLength, setInvoiceLength] = useState(0);
-  const [invoicesPerPage, setInvoicesPerPage] = useState(5);
 
-  const [pagesButtonArray, setPagesButtonArray] = useState([
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    "...",
-  ]);
   const [loadingPages, setLoadingPages] = useState(true);
 
-  const [currentaPage, setCurrentaPage] = useState(1);
   const [products, setProducts] = useState("");
 
   // pop ups states
@@ -68,101 +58,20 @@ export const InvoicesManager = () => {
   const [invoceImgSelected, setInvoceImgSelected] = useState({});
 
   // get the total of pages
-  const getInvoicesFromApi = async () => {
-    let invoicesImported = "";
-    let totalInvoice = 0;
-
+  const getInvoicesFromApi = async (ini = 0, end = 5) => {
+    setInvoicesLoading(true);
+    let res = "";
     if (globalUser.status === "admin") {
-      const res = await getInvoicesByRange(0, invoicesPerPage);
-      invoicesImported = res.invoices;
-      totalInvoice = res.totalInvoice;
+      res = await getInvoicesByRange(ini, end);
     } else {
-      invoicesImported = await getInvoicesByRangeByClient(
-        globalUser.id,
-        0,
-        100000
-      );
+      res = await getInvoicesByRangeByClient(globalUser.id, ini, end);
     }
-    setInvoices(invoicesImported);
-    setInvoiceLength(invoicesImported.length);
+    console.log("total invoice", res);
+    setTotalInvoicesCount(res.totalInvoices);
+    setInvoices(res.invoices);
     setInvoicesLoading(false);
     setLoadingPages(false);
   };
-
-  useEffect(() => {
-    getInvoicesFromApi();
-  }, []);
-
-  // handle page change
-  // useEffect(() => {
-  //   const lastPage =
-  //     parseInt(invoiceLength / invoicesPerPage) ==
-  //     invoiceLength / invoicesPerPage
-  //       ? parseInt(invoiceLength / invoicesPerPage)
-  //       : parseInt(invoiceLength / invoicesPerPage) + 1;
-
-  //   // change pagesButtonArray
-  //   if (currentaPage > 5 && lastPage >= 9) {
-  //     if (currentaPage > lastPage - 4) {
-  //       setPagesButtonArray([
-  //         1,
-  //         "...",
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 7,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 6,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 5,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 4,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 3,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 2,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 1,
-  //         parseInt(invoiceLength / invoicesPerPage) + 1,
-  //       ]);
-  //     } else {
-  //       setPagesButtonArray([
-  //         1,
-  //         "...",
-  //         currentaPage - 2,
-  //         currentaPage - 1,
-  //         currentaPage,
-  //         currentaPage + 1,
-  //         currentaPage + 2,
-  //         "...",
-  //         lastPage,
-  //       ]);
-  //     }
-  //   } else {
-  //     if (lastPage > 9) {
-  //       setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "...", lastPage]);
-  //     } else {
-  //       setPagesButtonArray(Array.from({ length: lastPage }, (_, i) => i + 1));
-  //     }
-  //   }
-  //   // get invoices if admin
-  //   if (globalUser.status === "admin") {
-  //     const getInvoicesFromApi = async () => {
-  //       const invoicesImported = await getInvoicesByRange(
-  //         (currentaPage - 1) * invoicesPerPage,
-  //         (currentaPage - 1) * invoicesPerPage + invoicesPerPage
-  //       );
-  //       setInvoices(invoicesImported);
-
-  //       setInvoicesLoading(false);
-  //     };
-  //     getInvoicesFromApi();
-  //   }
-  //   // get invoices if client
-  //   if (globalUser.status === "client") {
-  //     const getInvoicesFromApi = async () => {
-  //       const invoicesImported = await getInvoicesByRangeByClient(
-  //         globalUser.id,
-  //         (currentaPage - 1) * invoicesPerPage,
-  //         (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
-  //       );
-  //       setInvoices(invoicesImported);
-  //       setInvoicesLoading(false);
-  //     };
-  //     getInvoicesFromApi();
-  //   }
-  // }, [currentaPage, loadingPages]);
 
   return (
     <section className="invoicesManager">
@@ -195,7 +104,11 @@ export const InvoicesManager = () => {
               </tr>
             </thead>
             {invoicesLoading ? (
-              <div className="loadingInvoicesBox">loading invoices...</div>
+              <tbody>
+                <tr>
+                  <td className="loadingInvoicesBox">loading invoices...</td>
+                </tr>
+              </tbody>
             ) : (
               <tbody>
                 {invoices.map((invoice, i) => {
@@ -244,36 +157,12 @@ export const InvoicesManager = () => {
               </tbody>
             )}
           </table>
-          <div className="paginationArea">
-            <div className="invoicesPerPage">Current page: {currentaPage}</div>
-            <ul className="paginationLinks">
-              {loadingPages ? (
-                <p>loading pages...</p>
-              ) : (
-                <>
-                  {pagesButtonArray.map((e, i) => {
-                    return (
-                      <li
-                        key={i}
-                        onClick={
-                          e === "..."
-                            ? () => {}
-                            : () => {
-                                setCurrentaPage(e);
-                              }
-                        }
-                      >
-                        {e}
-                      </li>
-                    );
-                  })}
-                </>
-              )}
-            </ul>
-            <div className="invoicesPerPage">
-              Invoices per page: {invoicesPerPage}
-            </div>
-          </div>
+          <Pagination
+            getInvoicesFromApi={getInvoicesFromApi}
+            loadingPages={loadingPages}
+            totalInvoicesCount={totalInvoicesCount}
+            setTotalInvoicesCount={setTotalInvoicesCount}
+          />
           {showProducts && (
             <ProductDisplay
               invoiceSelected={invoiceSelected}
