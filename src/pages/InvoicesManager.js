@@ -216,7 +216,10 @@ export const InvoicesManager = () => {
                         <button
                           className="tableIcons"
                           onClick={() => {
-                            setInvoceSelected(invoice?.products);
+                            setInvoceSelected({
+                              id: invoice.id,
+                              products: invoice?.products,
+                            });
                             setInvoceImgSelected(invoice.image);
                             setShowImage(!showImage);
                           }}
@@ -284,7 +287,7 @@ export const InvoicesManager = () => {
             <ImageDisplay
               showImage={showImage}
               setShowImage={setShowImage}
-              invoceIdSelected={invoiceSelected}
+              invoceSelected={invoiceSelected}
               invoceImgSelected={invoceImgSelected}
             />
           )}

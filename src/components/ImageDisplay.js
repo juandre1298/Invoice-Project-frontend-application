@@ -3,27 +3,11 @@ import { useEffect, useState } from "react";
 import { BsImage } from "react-icons/bs";
 
 export const ImageDisplay = (props) => {
-  const { showImage, setShowImage, invoceIdSelected, invoceImgSelected } =
-    props;
+  const { showImage, setShowImage, invoceSelected, invoceImgSelected } = props;
   console.log("imageDisplay Props:", props);
   // states
-  const [imageLink, setImageLink] = useState("");
+
   const [zoom, setZoom] = useState(false);
-  // set final link
-  useEffect(() => {
-    if (invoceImgSelected?.includes("google")) {
-      const ini = invoceImgSelected.indexOf("/d/") + 3;
-      const end = invoceImgSelected.indexOf("/view");
-      const finalString = `https://drive.google.com/uc?export=view&id=${invoceImgSelected.slice(
-        ini,
-        end
-      )}`;
-      console.log(ini, end, finalString);
-      setImageLink(finalString);
-    } else {
-      setImageLink(invoceImgSelected);
-    }
-  }, []);
 
   return (
     <section className="imagePopUpfloatingSection">
@@ -34,8 +18,8 @@ export const ImageDisplay = (props) => {
         }}
       ></div>
       <div className="imageDisplayPopUpBox">
-        {invoceIdSelected ? (
-          <h1>Voucher # {invoceIdSelected}</h1>
+        {invoceSelected.id ? (
+          <h1>Voucher # {invoceSelected.id}</h1>
         ) : (
           <h1>Image Preview</h1>
         )}
@@ -52,8 +36,8 @@ export const ImageDisplay = (props) => {
               }
             >
               <img
-                src={imageLink}
-                alt={`charging ${imageLink}`}
+                src={invoceImgSelected}
+                alt={`loading ${invoceImgSelected}...`}
                 className={
                   zoom ? "imageSelectedPreviewZoomed" : "imageSelectedPreview"
                 }
