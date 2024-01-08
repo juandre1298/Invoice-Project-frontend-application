@@ -68,104 +68,101 @@ export const InvoicesManager = () => {
   const [invoceImgSelected, setInvoceImgSelected] = useState({});
 
   // get the total of pages
-  useEffect(() => {
+  const getInvoicesFromApi = async () => {
+    let invoicesImported = "";
+    let totalInvoice = 0;
+
     if (globalUser.status === "admin") {
-      const getInvoicesFromApi = async () => {
-        setLoadingPages(true);
-        // const invoicesImported = await getInvoices();
-        const invoicesImported = await getInvoicesByRange(0, invoicesPerPage);
-        setInvoiceLength(invoicesImported.length);
-        setAllInvoices(invoicesImported);
-        setLoadingPages(false);
-      };
-      getInvoicesFromApi();
+      const res = await getInvoicesByRange(0, invoicesPerPage);
+      invoicesImported = res.invoices;
+      totalInvoice = res.totalInvoice;
     } else {
-      const getInvoicesFromApi = async () => {
-        const invoicesImported = await getInvoicesByRangeByClient(
-          globalUser.id,
-          0,
-          100000
-        );
-        setAllInvoices(invoicesImported);
-        setInvoiceLength(invoicesImported.length);
-        setLoadingPages(false);
-      };
-      getInvoicesFromApi();
+      invoicesImported = await getInvoicesByRangeByClient(
+        globalUser.id,
+        0,
+        100000
+      );
     }
-    // console.log("all invoices", allInvoices);
+    setInvoices(invoicesImported);
+    setInvoiceLength(invoicesImported.length);
+    setInvoicesLoading(false);
+    setLoadingPages(false);
+  };
+
+  useEffect(() => {
+    getInvoicesFromApi();
   }, []);
 
   // handle page change
-  useEffect(() => {
-    const lastPage =
-      parseInt(invoiceLength / invoicesPerPage) ==
-      invoiceLength / invoicesPerPage
-        ? parseInt(invoiceLength / invoicesPerPage)
-        : parseInt(invoiceLength / invoicesPerPage) + 1;
+  // useEffect(() => {
+  //   const lastPage =
+  //     parseInt(invoiceLength / invoicesPerPage) ==
+  //     invoiceLength / invoicesPerPage
+  //       ? parseInt(invoiceLength / invoicesPerPage)
+  //       : parseInt(invoiceLength / invoicesPerPage) + 1;
 
-    // change pagesButtonArray
-    if (currentaPage > 5 && lastPage >= 9) {
-      if (currentaPage > lastPage - 4) {
-        setPagesButtonArray([
-          1,
-          "...",
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 7,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 6,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 5,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 4,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 3,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 2,
-          parseInt(invoiceLength / invoicesPerPage) + 1 - 1,
-          parseInt(invoiceLength / invoicesPerPage) + 1,
-        ]);
-      } else {
-        setPagesButtonArray([
-          1,
-          "...",
-          currentaPage - 2,
-          currentaPage - 1,
-          currentaPage,
-          currentaPage + 1,
-          currentaPage + 2,
-          "...",
-          lastPage,
-        ]);
-      }
-    } else {
-      if (lastPage > 9) {
-        setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "...", lastPage]);
-      } else {
-        setPagesButtonArray(Array.from({ length: lastPage }, (_, i) => i + 1));
-      }
-    }
-    // get invoices if admin
-    if (globalUser.status === "admin") {
-      const getInvoicesFromApi = async () => {
-        const invoicesImported = await getInvoicesByRange(
-          (currentaPage - 1) * invoicesPerPage,
-          (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
-        );
-        setInvoices(invoicesImported);
+  //   // change pagesButtonArray
+  //   if (currentaPage > 5 && lastPage >= 9) {
+  //     if (currentaPage > lastPage - 4) {
+  //       setPagesButtonArray([
+  //         1,
+  //         "...",
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 7,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 6,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 5,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 4,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 3,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 2,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1 - 1,
+  //         parseInt(invoiceLength / invoicesPerPage) + 1,
+  //       ]);
+  //     } else {
+  //       setPagesButtonArray([
+  //         1,
+  //         "...",
+  //         currentaPage - 2,
+  //         currentaPage - 1,
+  //         currentaPage,
+  //         currentaPage + 1,
+  //         currentaPage + 2,
+  //         "...",
+  //         lastPage,
+  //       ]);
+  //     }
+  //   } else {
+  //     if (lastPage > 9) {
+  //       setPagesButtonArray([1, 2, 3, 4, 5, 6, 7, "...", lastPage]);
+  //     } else {
+  //       setPagesButtonArray(Array.from({ length: lastPage }, (_, i) => i + 1));
+  //     }
+  //   }
+  //   // get invoices if admin
+  //   if (globalUser.status === "admin") {
+  //     const getInvoicesFromApi = async () => {
+  //       const invoicesImported = await getInvoicesByRange(
+  //         (currentaPage - 1) * invoicesPerPage,
+  //         (currentaPage - 1) * invoicesPerPage + invoicesPerPage
+  //       );
+  //       setInvoices(invoicesImported);
 
-        setInvoicesLoading(false);
-      };
-      getInvoicesFromApi();
-    }
-    // get invoices if client
-    if (globalUser.status === "client") {
-      const getInvoicesFromApi = async () => {
-        const invoicesImported = await getInvoicesByRangeByClient(
-          globalUser.id,
-          (currentaPage - 1) * invoicesPerPage,
-          (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
-        );
-        setInvoices(invoicesImported);
-        setInvoicesLoading(false);
-      };
-      getInvoicesFromApi();
-    }
-  }, [currentaPage, loadingPages]);
-  console.log("all invoices", allInvoices);
+  //       setInvoicesLoading(false);
+  //     };
+  //     getInvoicesFromApi();
+  //   }
+  //   // get invoices if client
+  //   if (globalUser.status === "client") {
+  //     const getInvoicesFromApi = async () => {
+  //       const invoicesImported = await getInvoicesByRangeByClient(
+  //         globalUser.id,
+  //         (currentaPage - 1) * invoicesPerPage,
+  //         (currentaPage - 1) * invoicesPerPage + invoicesPerPage - 1
+  //       );
+  //       setInvoices(invoicesImported);
+  //       setInvoicesLoading(false);
+  //     };
+  //     getInvoicesFromApi();
+  //   }
+  // }, [currentaPage, loadingPages]);
 
   return (
     <section className="invoicesManager">
