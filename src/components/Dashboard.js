@@ -12,14 +12,7 @@ import { getUsers, getProducts, getDashboardData } from "../api/api";
 
 export const InvoiceDashboard = (props) => {
   const { allInvoices } = props;
-  const {
-    globalUser,
-    setGlobalUser,
-    globalStatus,
-    setGlobalStatus,
-    showInvoiceCreator,
-    setShowInvoiceCreator,
-  } = useContext(MyContext);
+  const { globalUser } = useContext(MyContext);
   // states
   // general states
   const [client, setClient] = useState("all");
