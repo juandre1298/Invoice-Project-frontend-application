@@ -62,7 +62,7 @@ export const Navbar = () => {
           </Link>
         </li>
 
-        {globalUser.status === "admin" && (
+        {globalUser.role === "admin" && (
           <>
             <li className="invoiceCreatorOnNavbar">
               <button

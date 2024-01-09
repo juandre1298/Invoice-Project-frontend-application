@@ -8,9 +8,7 @@ import BarChart from "./BarChart";
 import LineChart from "./LineChart";
 
 // import from api
-import { getUsers } from "../api/api";
-import { getProducts } from "../api/api";
-import { CostExplorer } from "aws-sdk";
+import { getUsers, getProducts, getDashboardData } from "../api/api";
 
 export const InvoiceDashboard = (props) => {
   const { allInvoices } = props;
@@ -243,6 +241,24 @@ export const InvoiceDashboard = (props) => {
   // handle changes
   useEffect(() => {
     createData();
+    const fetchDashboardData = async () => {
+      try {
+        const options = {
+          userId: globalUser.id,
+          client,
+          detailsSelectorData,
+          dataDisplay,
+          initialDate,
+          finalDate,
+        };
+        console.log(options);
+        const res = await getDashboardData(options);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchDashboardData();
   }, [client, detailsSelectorData, dataDisplay, initialDate, finalDate]);
 
   return (
@@ -316,7 +332,7 @@ export const InvoiceDashboard = (props) => {
                 </div>
               </div>
               <div className="SumaryChartSection">
-                {globalUser.status === "admin" && (
+                {globalUser.role === "admin" && (
                   <div className="SumaryChartSectionController">
                     <label>Client</label>
                     <br />
@@ -339,7 +355,7 @@ export const InvoiceDashboard = (props) => {
                   </div>
                 )}
                 <div className="displaySummaryInfo">
-                  {globalUser.status === "admin" && <div>Client:{client}</div>}
+                  {globalUser.role === "admin" && <div>Client:{client}</div>}
 
                   <div>
                     Total Sale: $
@@ -369,7 +385,7 @@ export const InvoiceDashboard = (props) => {
               </div>
             </div>
             <div className="barChartSection">
-              {globalUser.status === "admin" && (
+              {globalUser.role === "admin" && (
                 <div className="barChartSectionControllerClient">
                   <label>Client</label>
                   <select

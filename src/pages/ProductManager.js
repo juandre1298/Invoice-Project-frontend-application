@@ -14,7 +14,7 @@ export const ProductManager = () => {
     >
       {globalStatus ? (
         <h1>
-          hi {globalUser.name} you are {globalUser.status}
+          hi {globalUser.name} you are {globalUser.role}
         </h1>
       ) : (
         <>

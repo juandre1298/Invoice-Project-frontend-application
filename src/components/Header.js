@@ -6,13 +6,7 @@ import { useLogout } from "../services/handleLogout";
 
 export const Header = () => {
   // import global data
-  const {
-    globalUser,
-    setGlobalUser,
-    globalStatus,
-
-    setGlobalStatus,
-  } = useContext(MyContext);
+  const { globalUser } = useContext(MyContext);
   // import handle logout hook
   const handleLogout = useLogout();
 
@@ -45,7 +39,7 @@ export const Header = () => {
         <h1>
           {pagesTitle[currentPath] ? pagesTitle[currentPath] : currentPath}
         </h1>
-        <h2>{globalUser.status}</h2>
+        <h2>{globalUser.role}</h2>
       </div>
     </header>
   );

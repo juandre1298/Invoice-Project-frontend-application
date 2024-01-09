@@ -117,3 +117,32 @@ export async function postImage({ image }) {
 
   return result.data;
 }
+
+// calculate dashboard data
+
+export const getDashboardData = async ({
+  userId,
+  client,
+  detailsSelectorData,
+  dataDisplay,
+  initialDate,
+  finalDate,
+}) => {
+  try {
+    console.log({
+      userId,
+      client,
+      detailsSelectorData,
+      dataDisplay,
+      initialDate,
+      finalDate,
+    });
+    let url = `http://localhost:4000/dashboard/data/${userId}?client=${client}&detailsSelectorData=${detailsSelectorData}&dataDisplay=${dataDisplay}&initialDate=${initialDate}&finalDate=${finalDate}`;
+
+    const response = await fetch(url);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

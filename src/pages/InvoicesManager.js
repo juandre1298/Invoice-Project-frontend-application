@@ -31,9 +31,7 @@ import { FaCubes } from "react-icons/fa";
 export const InvoicesManager = () => {
   const {
     globalUser,
-    setGlobalUser,
     globalStatus,
-    setGlobalStatus,
     showInvoiceCreator,
     setShowInvoiceCreator,
   } = useContext(MyContext);
@@ -61,7 +59,7 @@ export const InvoicesManager = () => {
   const getInvoicesFromApi = async (ini = 0, end = 5) => {
     setInvoicesLoading(true);
     let res = "";
-    if (globalUser.status === "admin") {
+    if (globalUser.role === "admin") {
       res = await getInvoicesByRange(ini, end);
     } else {
       res = await getInvoicesByRangeByClient(globalUser.id, ini, end);
@@ -75,11 +73,11 @@ export const InvoicesManager = () => {
 
   return (
     <section className="invoicesManager">
-      {/* <InvoiceDashboard allInvoices={allInvoices} /> */}
+      <InvoiceDashboard allInvoices={allInvoices} />
 
       {globalStatus ? (
         <div className="invoicesBox">
-          {globalUser.status === "admin" && (
+          {globalUser.role === "admin" && (
             <button
               onClick={() => {
                 setShowInvoiceCreator(!showInvoiceCreator);

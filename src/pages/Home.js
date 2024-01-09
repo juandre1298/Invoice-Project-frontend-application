@@ -4,14 +4,13 @@ import { Link } from "react-router-dom";
 import MyContext from "../contexts/userContext";
 
 export const Home = () => {
-  const { globalUser, setGlobalUser, globalStatus, setGlobalStatus } =
-    useContext(MyContext);
+  const { globalUser, globalStatus } = useContext(MyContext);
 
   return (
     <section className="homeMain">
       {globalStatus ? (
         <h1>
-          hi {globalUser.name} you are {globalUser.status}
+          hi {globalUser.name} you are {globalUser.role}
         </h1>
       ) : (
         <>
