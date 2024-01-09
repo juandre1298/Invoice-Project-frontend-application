@@ -66,7 +66,10 @@ export const Login = () => {
         </p>
       </div>
       <div className="loginBox">
-        <img src="LogoAim_Edge.jpg" alt="logo" />
+        <div className="logoBox">
+          <img src="lionlogo.png" alt="logo" />
+          <span>Easy Bills Hub</span>
+        </div>
         {globalStatus ? (
           <div>
             <h1>You are already logged, wanna logout?</h1>

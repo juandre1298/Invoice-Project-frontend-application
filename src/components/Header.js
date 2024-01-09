@@ -33,8 +33,14 @@ export const Header = () => {
 
   return (
     <header className="headerSection">
-      <img src="LogoAim_Edge.jpg" alt="logo" />
-
+      <div className="logoBox" style={{ gap: "10px" }}>
+        <img
+          src="lionlogo.png"
+          style={{ height: "65px", width: "65px" }}
+          alt="logo"
+        />
+        <span>EBH</span>
+      </div>
       <div className="pathAndStatus">
         <h1>
           {pagesTitle[currentPath] ? pagesTitle[currentPath] : currentPath}
