@@ -14,13 +14,13 @@ export const InvoiceDashboard = (props) => {
   const { allInvoices } = props;
   const { globalUser } = useContext(MyContext);
   // states
-  // general states
+  // state options
   const [client, setClient] = useState("all");
+  const [productsForSale, setProductsForSale] = useState([]);
+  const [initialDate, setInitialDate] = useState(0);
+  const [finalDate, setFinalDate] = useState(Date.now());
 
   const [clients, setClients] = useState([]);
-
-  const [productsForSale, setProductsForSale] = useState([]);
-
   // chart states
   const [dataForPieChart, setDataForPieChart] = useState([]);
   const [dataForFChart, setDataForFChart] = useState({
@@ -32,8 +32,6 @@ export const InvoiceDashboard = (props) => {
     datasets: [],
   });
 
-  const [initialDate, setInitialDate] = useState(0);
-  const [finalDate, setFinalDate] = useState(Date.now());
   const [loadingChartData, setLoadingChartData] = useState(true);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   // chart controllers
@@ -155,6 +153,7 @@ export const InvoiceDashboard = (props) => {
         },
       ],
     };
+    console.log();
     setDataForPieChart(PieData);
 
     if (client) {
@@ -231,27 +230,35 @@ export const InvoiceDashboard = (props) => {
     // calculate with
     setLoadingChartData(false);
   };
+
+  const fetchDashboardData = async (options) => {
+    try {
+      // const {
+      //   userId,
+      //   client,
+      //   detailsSelectorData,
+      //   dataDisplay,
+      //   initialDate,
+      //   finalDate,
+      // } = options;
+      console.log(options);
+      const res = await getDashboardData(options);
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // handle changes
   useEffect(() => {
-    createData();
-    const fetchDashboardData = async () => {
-      try {
-        const options = {
-          userId: globalUser.id,
-          client,
-          detailsSelectorData,
-          dataDisplay,
-          initialDate,
-          finalDate,
-        };
-        console.log(options);
-        const res = await getDashboardData(options);
-        console.log(res);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchDashboardData();
+    // createData();
+    fetchDashboardData({
+      userId: globalUser.id,
+      client,
+      detailsSelectorData,
+      dataDisplay,
+      initialDate,
+      finalDate,
+    });
   }, [client, detailsSelectorData, dataDisplay, initialDate, finalDate]);
 
   return (
