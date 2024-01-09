@@ -129,19 +129,11 @@ export const getDashboardData = async ({
   finalDate,
 }) => {
   try {
-    console.log({
-      userId,
-      client,
-      detailsSelectorData,
-      dataDisplay,
-      initialDate,
-      finalDate,
-    });
     let url = `http://localhost:4000/dashboard/data/${userId}?client=${client}&detailsSelectorData=${detailsSelectorData}&dataDisplay=${dataDisplay}&initialDate=${initialDate}&finalDate=${finalDate}`;
-
     const response = await fetch(url);
 
-    return response.data;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
   }

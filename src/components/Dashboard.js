@@ -91,38 +91,178 @@ export const InvoiceDashboard = (props) => {
   useEffect(() => {
     getUsersFromApi().then(() => {
       getProductsFromApi().then(() => {
-        createData();
+        fetchDashboardData({
+          userId: globalUser.id,
+          client,
+          detailsSelectorData,
+          dataDisplay,
+          initialDate,
+          finalDate,
+        });
       });
     });
   }, [allInvoices]);
 
   // create data for charts
   const [dataSummary, setDataSummary] = useState([]);
-  const createData = () => {
-    setLoadingChartData(true);
-    // filter data by date
-    const invoiceInRange = allInvoices.filter(
-      (invoiceN) =>
-        new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
-        new Date(invoiceN.dateOfEntry) <= new Date(finalDate)
-    );
-    const purchaseArray = clients.map((clientN) =>
-      invoiceInRange.filter((invoiceN) => invoiceN.userId === clientN.id)
-    );
-    let productPrices = {};
-    productsForSale.forEach((e) => (productPrices[e.name] = e.price));
+  // const createData = () => {
+  //   setLoadingChartData(true);
+  //   // filter data by date
+  //   const invoiceInRange = allInvoices.filter(
+  //     (invoiceN) =>
+  //       new Date(invoiceN.dateOfEntry) >= new Date(initialDate) &&
+  //       new Date(invoiceN.dateOfEntry) <= new Date(finalDate)
+  //   );
+  //   const purchaseArray = clients.map((clientN) =>
+  //     invoiceInRange.filter((invoiceN) => invoiceN.userId === clientN.id)
+  //   );
+  //   let productPrices = {};
+  //   productsForSale.forEach((e) => (productPrices[e.name] = e.price));
 
-    const clientsData = generateData(purchaseArray, productPrices);
-    setDataSummary(clientsData);
-    // generate Pie Chart
-    const PieData = {
-      labels: clientsData?.filter((e) => e.name !== "all").map((e) => e.name),
+  //   const clientsData = generateData(purchaseArray, productPrices);
+  //   setDataSummary(clientsData);
+  //   // generate Pie Chart
+  //   const PieData = {
+  //     labels: clientsData?.filter((e) => e.name !== "all").map((e) => e.name),
+  //     datasets: [
+  //       {
+  //         label: "Customer purchase",
+  //         data: clientsData
+  //           ?.filter((e) => e.name !== "all")
+  //           .map((e) => e[dataDisplay]),
+  //         backgroundColor: [
+  //           "rgba(0, 51, 204, 0.5)", // Deep blue
+  //           "rgba(51, 102, 255, 0.5)", // Medium blue
+  //           "rgba(102, 153, 255, 0.5)", // Light blue
+  //           "rgba(128, 128, 128, 0.5)", // Medium gray
+  //           "rgba(192, 192, 192, 0.5)", // Light gray
+  //           "rgba(224, 224, 224, 0.5)", // Very light gray
+  //           "rgba(147, 112, 219, 0.5)", // Medium purple
+  //           "rgba(218, 112, 214, 0.5)", // Orchid
+  //           "rgba(138, 43, 226, 0.5)", // Blue violet
+  //           "rgba(0, 0, 0, 0.5)", // Black
+  //           "rgba(32, 32, 32, 0.5)", // Dark gray
+  //         ],
+  //         borderColor: [
+  //           "rgba(0, 51, 204, 1)", // Deep blue
+  //           "rgba(51, 102, 255, 1)", // Medium blue
+  //           "rgba(102, 153, 255, 1)", // Light blue
+  //           "rgba(128, 128, 128, 1)", // Medium gray
+  //           "rgba(192, 192, 192, 1)", // Light gray
+  //           "rgba(224, 224, 224, 1)", // Very light gray
+  //           "rgba(147, 112, 219, 1)", // Medium purple
+  //           "rgba(218, 112, 214, 1)", // Orchid
+  //           "rgba(138, 43, 226, 1)", // Blue violet
+  //           "rgba(0, 0, 0, 1)", // Black
+  //           "rgba(32, 32, 32, 1)", // Dark gray
+  //         ],
+  //         borderWidth: 1,
+  //       },
+  //     ],
+  //   };
+  //   console.log();
+  //   setDataForPieChart(PieData);
+
+  //   if (client) {
+  //     try {
+  //       // generate Line chart data
+  //       const [labelsLineChart, totals, discounts, numberOfProducts, sales] =
+  //         generateDataLine(invoiceInRange, client);
+  //       const dataLineChart = {
+  //         labels: labelsLineChart,
+  //         datasets: [
+  //           {
+  //             label: "Totals",
+  //             yAxisID: "y",
+  //             data: totals,
+  //             fill: true,
+  //             backgroundColor: "#0fc9e7",
+  //             borderColor: "rgba(75,192,192,1)",
+  //           },
+  //           {
+  //             label: "Discounts",
+  //             yAxisID: "y",
+  //             data: discounts,
+  //             fill: false,
+  //             borderColor: "rgba(51,102,255,1)",
+  //           },
+  //           {
+  //             label: "Number Of Products",
+  //             yAxisID: "y1",
+  //             data: numberOfProducts,
+  //             fill: false,
+  //             borderColor: "rgba(75,75,75,1)", // Dark gray color
+  //             borderDash: [5, 5], // Set the border dash pattern for "Number Of Products"
+  //           },
+  //           {
+  //             label: "Sales",
+  //             yAxisID: "y1",
+  //             data: sales,
+  //             fill: false,
+  //             borderColor: "black",
+  //             borderDash: [5, 5], // Set the border dash pattern for "Sales"
+  //           },
+  //         ],
+  //       };
+  //       setDataForLineChart(dataLineChart);
+  //       // frequency chart data
+
+  //       const objectProductos = clientsData?.filter((e) => {
+  //         return e.name === client;
+  //       })[0]?.productCount;
+
+  //       objectProductos.sort((a, b) => {
+  //         return -a[detailsSelectorData] + b[detailsSelectorData];
+  //       });
+  //       const labels = objectProductos?.map((e) => e.productName);
+  //       const dataBar = objectProductos?.map((e) => e[detailsSelectorData]);
+
+  //       const barData = {
+  //         labels: labels, // Y-axis labels
+  //         datasets: [
+  //           {
+  //             label: detailsSelectorData,
+  //             data: dataBar, // X-axis values
+  //             backgroundColor: "rgba(0, 123, 255, 0.5)", // Bar color
+  //           },
+  //         ],
+  //       };
+
+  //       setDataForFChart(barData);
+  //     } catch (error) {
+  //       console.error("no pruchases made", error);
+  //       setDataForFChart(null);
+  //     }
+  //   }
+  //   // calculate with
+  //   setLoadingChartData(false);
+  // };
+
+  const fetchDashboardData = async (options) => {
+    try {
+      console.log("options to get data:", options);
+      setLoadingChartData(true);
+      const chartData = await getDashboardData(options);
+      console.log("chart data:", chartData);
+      // set pie chart
+      const pieChartData = generatePieChart(
+        chartData.pieChartData.labels,
+        chartData.pieChartData.values
+      );
+      setDataForPieChart(pieChartData);
+      setLoadingChartData(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const generatePieChart = (labels, values) => {
+    return {
+      labels,
       datasets: [
         {
           label: "Customer purchase",
-          data: clientsData
-            ?.filter((e) => e.name !== "all")
-            .map((e) => e[dataDisplay]),
+          data: values,
           backgroundColor: [
             "rgba(0, 51, 204, 0.5)", // Deep blue
             "rgba(51, 102, 255, 0.5)", // Medium blue
@@ -153,101 +293,8 @@ export const InvoiceDashboard = (props) => {
         },
       ],
     };
-    console.log();
-    setDataForPieChart(PieData);
-
-    if (client) {
-      try {
-        // generate Line chart data
-        const [labelsLineChart, totals, discounts, numberOfProducts, sales] =
-          generateDataLine(invoiceInRange, client);
-        const dataLineChart = {
-          labels: labelsLineChart,
-          datasets: [
-            {
-              label: "Totals",
-              yAxisID: "y",
-              data: totals,
-              fill: true,
-              backgroundColor: "#0fc9e7",
-              borderColor: "rgba(75,192,192,1)",
-            },
-            {
-              label: "Discounts",
-              yAxisID: "y",
-              data: discounts,
-              fill: false,
-              borderColor: "rgba(51,102,255,1)",
-            },
-            {
-              label: "Number Of Products",
-              yAxisID: "y1",
-              data: numberOfProducts,
-              fill: false,
-              borderColor: "rgba(75,75,75,1)", // Dark gray color
-              borderDash: [5, 5], // Set the border dash pattern for "Number Of Products"
-            },
-            {
-              label: "Sales",
-              yAxisID: "y1",
-              data: sales,
-              fill: false,
-              borderColor: "black",
-              borderDash: [5, 5], // Set the border dash pattern for "Sales"
-            },
-          ],
-        };
-        setDataForLineChart(dataLineChart);
-        // frequency chart data
-
-        const objectProductos = clientsData?.filter((e) => {
-          return e.name === client;
-        })[0]?.productCount;
-
-        objectProductos.sort((a, b) => {
-          return -a[detailsSelectorData] + b[detailsSelectorData];
-        });
-        const labels = objectProductos?.map((e) => e.productName);
-        const dataBar = objectProductos?.map((e) => e[detailsSelectorData]);
-
-        const barData = {
-          labels: labels, // Y-axis labels
-          datasets: [
-            {
-              label: detailsSelectorData,
-              data: dataBar, // X-axis values
-              backgroundColor: "rgba(0, 123, 255, 0.5)", // Bar color
-            },
-          ],
-        };
-
-        setDataForFChart(barData);
-      } catch (error) {
-        console.error("no pruchases made", error);
-        setDataForFChart(null);
-      }
-    }
-    // calculate with
-    setLoadingChartData(false);
   };
 
-  const fetchDashboardData = async (options) => {
-    try {
-      // const {
-      //   userId,
-      //   client,
-      //   detailsSelectorData,
-      //   dataDisplay,
-      //   initialDate,
-      //   finalDate,
-      // } = options;
-      console.log(options);
-      const res = await getDashboardData(options);
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   // handle changes
   useEffect(() => {
     // createData();

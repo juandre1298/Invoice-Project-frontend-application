@@ -64,7 +64,6 @@ export const InvoicesManager = () => {
     } else {
       res = await getInvoicesByRangeByClient(globalUser.id, ini, end);
     }
-    console.log("total invoice", res);
     setTotalInvoicesCount(res.totalInvoices);
     setInvoices(res.invoices);
     setInvoicesLoading(false);
