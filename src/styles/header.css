@@ -8,11 +8,12 @@
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  padding-left: 40px;
   border-bottom: 2px solid #d3cbc9;
   z-index: 1;
 }
 header img {
-  width: 230px;
+  width: 80px;
 }
 header h1 {
   color: rgb(56, 58, 58);
