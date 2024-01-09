@@ -52,7 +52,7 @@ export const Navbar = () => {
   return (
     <nav className={minNav ? "navDisplay" : "navCollapse"}>
       <div className="logoArea">
-        <h1>AIM EDGE APPS</h1>
+        <h1>Easy Bills Hub</h1>
       </div>
       <ul className="NavLinksArea">
         <li>
